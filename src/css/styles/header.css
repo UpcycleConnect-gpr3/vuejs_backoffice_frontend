@@ -1,0 +1,5 @@
+header {
+    --header-height: 72px;
+    --header-bg-color: var(--primary-color);
+    --header-margin-top: 1rem;
+}
