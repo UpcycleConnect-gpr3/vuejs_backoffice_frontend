@@ -1,6 +1,6 @@
 .sidebar {
     width: var(--sidebar-width);
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     gap: var(--sidebar-gap);
@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     padding: var(--padding-small) var(--padding-medium);
-    border-radius: var(--rounded-component);
+    border-radius: 0;
     color: var(--sidebar-nav-item-color);
     text-decoration: none;
     font-size: var(--font-size-small);
@@ -40,4 +40,55 @@
         color: var(--sidebar-nav-item-active-color);
         background-color: var(--sidebar-nav-item-active-bg);
     }
+}
+
+/* ─── Sidebar logo ──────────────────────────────────────────────────────── */
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    padding: var(--padding-small) var(--padding-medium);
+}
+
+.sidebar-logo-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+/* ─── Sidebar user block (bottom) ───────────────────────────────────────── */
+
+.sidebar-user {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-medium);
+    padding: var(--padding-small) var(--padding-medium);
+}
+
+.sidebar-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+    background-color: oklch(from var(--white) l c h / 0.25);
+    flex-shrink: 0;
+}
+
+.sidebar-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-user-name {
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--primary-foreground-color);
+}
+
+.sidebar-user-role {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+    opacity: 0.85;
 }
