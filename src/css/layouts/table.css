@@ -1,0 +1,38 @@
+.table-wrapper {
+    border: var(--border-width-layout) var(--border-style-layout) oklch(from var(--white) l c h / 0.15);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-small);
+}
+
+thead {
+    background-color: oklch(from var(--white) l c h / 0.05);
+}
+
+th {
+    text-align: left;
+    padding: var(--padding-medium) var(--padding-large);
+    font-weight: 500;
+    color: oklch(from var(--white) l c h / 0.6);
+    border-bottom: var(--border-width-layout) var(--border-style-layout) oklch(from var(--white) l c h / 0.1);
+    white-space: nowrap;
+}
+
+td {
+    padding: var(--padding-medium) var(--padding-large);
+    color: var(--foreground-color);
+    border-bottom: 1px solid oklch(from var(--white) l c h / 0.08);
+    vertical-align: middle;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover td {
+    background-color: oklch(from var(--white) l c h / 0.03);
+}
