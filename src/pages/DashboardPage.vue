@@ -1,137 +1,140 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { computed } from 'vue'
+import { Pie } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import AppSidebar from '@/components/AppSidebar.vue'
+import { useDashboard } from '@/composables/useDashboard'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
+
+const { stats, pendingActions, activityLogs } = useDashboard()
+
+const chartData = computed(() => ({
+  labels: stats.value.prestatairesDistribution.labels,
+  datasets: [
+    {
+      data: stats.value.prestatairesDistribution.values,
+      backgroundColor: ['#3b82f6', '#d97706', '#22c55e'],
+      borderWidth: 0,
+    },
+  ],
+}))
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'right' as const,
+      labels: {
+        color: '#ffffff',
+        font: { size: 12 },
+      },
+    },
+  },
+}
 </script>
 
 <template>
-  <header>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      <span>UpcycleConnect</span>
-    </div>
+  <div class="layout-app">
+    <AppSidebar />
 
-    <nav>
-      <RouterLink to="/" class="navlink">Home</RouterLink>
-      <RouterLink to="/service" class="navlink">Service</RouterLink>
-      <RouterLink to="/resources" class="navlink">Resources</RouterLink>
-      <RouterLink to="/pricing" class="navlink">Pricing</RouterLink>
-    </nav>
+    <main class="dashboard-main">
+      <h1 class="dashboard-title">Tableau de bord</h1>
 
-    <div class="layout-flex layout-gap-medium layout-items-center">
-      <button class="secondary medium">Sign up</button>
-      <button class="outline medium">Log in</button>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section>
-      <div class="container layout-flex layout-columns layout-items-center layout-gap-large">
-        <hgroup class="center">
-          <h1 class="bold center secondary">A headline to make a big<br />impact on visitors</h1>
-          <p class="center">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book.
-          </p>
-        </hgroup>
-        <div class="layout-flex layout-gap-medium">
-          <button class="primary medium">Get started</button>
-          <button class="outline medium">Learn more</button>
+      <div class="dashboard-row">
+        <div class="dashboard-card dashboard-card--chart">
+          <div class="dashboard-chart-wrapper">
+            <Pie :data="chartData" :options="chartOptions" />
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Feature -->
-    <section>
-      <div class="container">
-        <div class="card grid-2">
-          <div class="image-placeholder"></div>
-          <div class="layout-flex layout-columns layout-gap-large">
-            <hgroup>
-              <h2 class="bold secondary">A headline to make a big impact on visitors</h2>
-              <p class="left">
-                Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                unknown printer took a galley of type and scrambled it to make a type specimen book.
-              </p>
-            </hgroup>
-            <div class="layout-flex layout-gap-medium">
-              <button class="primary medium">Get started</button>
-              <button class="outline medium">Learn more</button>
-            </div>
+        <div class="dashboard-card dashboard-card--stats">
+          <div class="dashboard-stat">
+            <svg
+              class="dashboard-stat-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+              />
+            </svg>
+            <span class="dashboard-stat-value">{{ stats.usersCount }}</span>
+          </div>
+
+          <div class="dashboard-stat-divider"></div>
+
+          <div class="dashboard-stat">
+            <svg
+              class="dashboard-stat-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0"
+              />
+            </svg>
+            <span class="dashboard-stat-value">{{ stats.prestatairesCount }}</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Partnership -->
-    <section>
-      <div class="container layout-flex layout-columns layout-items-center layout-gap-large">
-        <hgroup class="center">
-          <h2 class="bold center secondary">Partnership</h2>
-          <p class="center">Our trusted partners !</p>
-        </hgroup>
-        <div class="grid-3" style="width: 100%">
-          <div class="image-placeholder"></div>
-          <div class="image-placeholder"></div>
-          <div class="image-placeholder"></div>
+      <div class="dashboard-row dashboard-row--actions">
+        <div
+          v-for="action in pendingActions"
+          :key="action.id"
+          class="dashboard-card dashboard-card--action"
+        >
+          <svg
+            class="dashboard-action-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0"
+            />
+          </svg>
+          <p class="dashboard-action-title">{{ action.title }}</p>
+          <p class="dashboard-action-desc">{{ action.description }}</p>
+          <RouterLink :to="action.link" class="dashboard-action-arrow">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m16 16 4-4m0 0-4-4m4 4H8" />
+            </svg>
+          </RouterLink>
         </div>
       </div>
-    </section>
 
-    <!-- Contact -->
-    <section>
-      <div class="container">
-        <div class="card grid-2">
-          <div class="layout-flex layout-columns layout-gap-large">
-            <hgroup>
-              <h2 class="bold secondary">Contact us</h2>
-              <p class="left">Consectetuer adipiscing lorem risus iortipps frcits ghcorh gug rii</p>
-            </hgroup>
-            <form>
-              <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="primary medium full-width" placeholder="Name" />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  class="primary medium full-width"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div class="form-group">
-                <label>Message</label>
-                <textarea
-                  class="primary medium full-width"
-                  placeholder="Type your message here"
-                ></textarea>
-              </div>
-              <button type="submit" class="primary medium">Get started</button>
-            </form>
-          </div>
-          <div class="image-placeholder" style="align-self: stretch; min-height: 360px"></div>
-        </div>
+      <div class="dashboard-card dashboard-card--activity">
+        <h2 class="dashboard-activity-title">Flux d'activité Récente</h2>
+        <ul class="dashboard-activity-list">
+          <li v-for="log in activityLogs" :key="log.id" class="dashboard-activity-item">
+            <div class="dashboard-activity-avatar"></div>
+            <span class="dashboard-activity-text"> {{ log.adminName }} - {{ log.action }} </span>
+          </li>
+        </ul>
       </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-nav">
-        <div class="logo">
-          <span>UpcycleConnect</span>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p class="left">© 2026 Alternex. All rights reserved.</p>
-        <div class="layout-flex layout-gap-medium layout-items-center">
-          <a class="ghost small">Privacy Policy</a>
-          <a class="ghost small">Terms of Service</a>
-          <a class="ghost small">Cookie Settings</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+    </main>
+  </div>
 </template>
