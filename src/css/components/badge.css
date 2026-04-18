@@ -1,0 +1,21 @@
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+
+    &.badge--success {
+        background-color: oklch(from var(--success-color) l c h / 0.15);
+        color: var(--success-color);
+    }
+
+    &.badge--muted {
+        background-color: oklch(from var(--white) l c h / 0.08);
+        color: oklch(from var(--white) l c h / 0.5);
+    }
+
+    &.badge--danger {
+        background-color: oklch(from var(--destructive-color) l c h / 0.15);
+        color: var(--destructive-color);
+    }
+}
