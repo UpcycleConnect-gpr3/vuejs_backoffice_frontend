@@ -1,0 +1,180 @@
+/* ─── Dashboard layout ──────────────────────────────────────────────────── */
+
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-large);
+    padding: var(--padding-large);
+    background-color: var(--background-color);
+    overflow-y: auto;
+}
+
+.dashboard-title {
+    font-size: var(--font-size-xxxlarge);
+    font-weight: 400;
+    color: var(--foreground-color);
+    margin-bottom: var(--gap-medium);
+}
+
+/* ─── Generic row ───────────────────────────────────────────────────────── */
+
+.dashboard-row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-large);
+    align-items: stretch;
+}
+
+.dashboard-row--actions {
+    flex-wrap: wrap;
+}
+
+/* ─── Generic card ──────────────────────────────────────────────────────── */
+
+.dashboard-card {
+    border-radius: 0;
+    border: var(--border-width-layout) var(--border-style-layout) oklch(from var(--white) l c h / 0.15);
+    padding: var(--padding-large);
+    background-color: var(--background-color);
+}
+
+/* ─── Chart card ────────────────────────────────────────────────────────── */
+
+.dashboard-card--chart {
+    flex: 1;
+    min-height: 240px;
+}
+
+.dashboard-chart-wrapper {
+    position: relative;
+    height: 200px;
+}
+
+/* ─── Stats card ────────────────────────────────────────────────────────── */
+
+.dashboard-card--stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: var(--gap-large);
+}
+
+.dashboard-stat {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-large);
+}
+
+.dashboard-stat-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--foreground-color);
+    flex-shrink: 0;
+}
+
+.dashboard-stat-value {
+    font-size: var(--font-size-xxlarge);
+    font-weight: 600;
+    color: var(--foreground-color);
+}
+
+.dashboard-stat-divider {
+    height: 1px;
+    background-color: oklch(from var(--white) l c h / 0.12);
+}
+
+/* ─── Action card ───────────────────────────────────────────────────────── */
+
+.dashboard-card--action {
+    flex: 1;
+    min-width: 280px;
+    background-color: var(--secondary-color);
+    border-color: transparent;
+    color: var(--secondary-foreground-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-medium);
+    position: relative;
+}
+
+.dashboard-action-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--secondary-foreground-color);
+}
+
+.dashboard-action-title {
+    font-size: var(--font-size-medium);
+    font-weight: 600;
+    color: var(--secondary-foreground-color);
+}
+
+.dashboard-action-desc {
+    font-size: var(--font-size-small);
+    color: var(--secondary-foreground-color);
+    opacity: 0.8;
+    flex: 1;
+}
+
+.dashboard-action-arrow {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary-foreground-color);
+    text-decoration: none;
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ─── Activity card ─────────────────────────────────────────────────────── */
+
+.dashboard-card--activity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-medium);
+}
+
+.dashboard-activity-title {
+    font-size: var(--font-size-medium);
+    font-weight: 500;
+    color: var(--foreground-color);
+}
+
+.dashboard-activity-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-activity-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-large);
+    padding: var(--padding-medium) 0;
+    border-bottom: 1px solid oklch(from var(--white) l c h / 0.08);
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.dashboard-activity-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    background-color: oklch(from var(--white) l c h / 0.15);
+    flex-shrink: 0;
+}
+
+.dashboard-activity-text {
+    font-size: var(--font-size-small);
+    color: var(--foreground-color);
+}

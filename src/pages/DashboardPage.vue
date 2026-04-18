@@ -29,9 +29,9 @@ import { RouterLink } from 'vue-router'
         <hgroup class="center">
           <h1 class="bold center secondary">A headline to make a big<br />impact on visitors</h1>
           <p class="center">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum
+            has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer took a galley of type and scrambled it to make a type specimen book.
           </p>
         </hgroup>
         <div class="layout-flex layout-gap-medium">
@@ -50,9 +50,9 @@ import { RouterLink } from 'vue-router'
             <hgroup>
               <h2 class="bold secondary">A headline to make a big impact on visitors</h2>
               <p class="left">
-                Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been
-                the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-                type and scrambled it to make a type specimen book.
+                Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                unknown printer took a galley of type and scrambled it to make a type specimen book.
               </p>
             </hgroup>
             <div class="layout-flex layout-gap-medium">
@@ -86,9 +86,7 @@ import { RouterLink } from 'vue-router'
           <div class="layout-flex layout-columns layout-gap-large">
             <hgroup>
               <h2 class="bold secondary">Contact us</h2>
-              <p class="left">
-                Consectetuer adipiscing lorem risus iortipps frcits ghcorh gug rii
-              </p>
+              <p class="left">Consectetuer adipiscing lorem risus iortipps frcits ghcorh gug rii</p>
             </hgroup>
             <form>
               <div class="form-group">
@@ -97,11 +95,18 @@ import { RouterLink } from 'vue-router'
               </div>
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="primary medium full-width" placeholder="Enter your email" />
+                <input
+                  type="email"
+                  class="primary medium full-width"
+                  placeholder="Enter your email"
+                />
               </div>
               <div class="form-group">
                 <label>Message</label>
-                <textarea class="primary medium full-width" placeholder="Type your message here"></textarea>
+                <textarea
+                  class="primary medium full-width"
+                  placeholder="Type your message here"
+                ></textarea>
               </div>
               <button type="submit" class="primary medium">Get started</button>
             </form>
