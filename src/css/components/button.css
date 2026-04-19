@@ -57,7 +57,6 @@ button {
         background-color: var(--button-active-bg-color);
         color: var(--button-active-text-color);
         outline-color: var(--button-active-outline-color);
-        /* translate: 0 2px; */
     }
 
     transition:

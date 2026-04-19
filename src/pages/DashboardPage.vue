@@ -1,137 +1,101 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { computed } from 'vue'
+import { Pie } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import AppSidebar from '@/components/AppSidebar.vue'
+import { useDashboard } from '@/composables/useDashboard'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
+
+const { stats, pendingActions, activityLogs } = useDashboard()
+
+const chartData = computed(() => ({
+  labels: stats.value.prestatairesDistribution.labels,
+  datasets: [
+    {
+      data: stats.value.prestatairesDistribution.values,
+      backgroundColor: ['#3b82f6', '#d97706', '#22c55e'],
+      borderWidth: 0,
+    },
+  ],
+}))
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'right' as const,
+      labels: {
+        color: '#ffffff',
+        font: { size: 12 },
+      },
+    },
+  },
+}
 </script>
 
 <template>
-  <header>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      <span>UpcycleConnect</span>
-    </div>
+  <div class="layout-app">
+    <AppSidebar />
 
-    <nav>
-      <RouterLink to="/" class="navlink">Home</RouterLink>
-      <RouterLink to="/service" class="navlink">Service</RouterLink>
-      <RouterLink to="/resources" class="navlink">Resources</RouterLink>
-      <RouterLink to="/pricing" class="navlink">Pricing</RouterLink>
-    </nav>
+    <main class="dashboard-main">
+      <h1 class="dashboard-title">Tableau de bord</h1>
 
-    <div class="layout-flex layout-gap-medium layout-items-center">
-      <button class="secondary medium">Sign up</button>
-      <button class="outline medium">Log in</button>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section>
-      <div class="container layout-flex layout-columns layout-items-center layout-gap-large">
-        <hgroup class="center">
-          <h1 class="bold center secondary">A headline to make a big<br />impact on visitors</h1>
-          <p class="center">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book.
-          </p>
-        </hgroup>
-        <div class="layout-flex layout-gap-medium">
-          <button class="primary medium">Get started</button>
-          <button class="outline medium">Learn more</button>
+      <div class="dashboard-row">
+        <div class="dashboard-card dashboard-card--chart">
+          <div class="dashboard-chart-wrapper">
+            <Pie :data="chartData" :options="chartOptions" />
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Feature -->
-    <section>
-      <div class="container">
-        <div class="card grid-2">
-          <div class="image-placeholder"></div>
-          <div class="layout-flex layout-columns layout-gap-large">
-            <hgroup>
-              <h2 class="bold secondary">A headline to make a big impact on visitors</h2>
-              <p class="left">
-                Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                unknown printer took a galley of type and scrambled it to make a type specimen book.
-              </p>
-            </hgroup>
-            <div class="layout-flex layout-gap-medium">
-              <button class="primary medium">Get started</button>
-              <button class="outline medium">Learn more</button>
-            </div>
+        <div class="dashboard-card dashboard-card--stats">
+          <div class="dashboard-stat">
+            <svg class="dashboard-stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
+              <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z" />
+            </svg>
+            <span class="dashboard-stat-value">{{ stats.usersCount }}</span>
+          </div>
+
+          <div class="dashboard-stat-divider"></div>
+
+          <div class="dashboard-stat">
+            <svg class="dashboard-stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
+              <path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z" />
+            </svg>
+            <span class="dashboard-stat-value">{{ stats.prestatairesCount }}</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Partnership -->
-    <section>
-      <div class="container layout-flex layout-columns layout-items-center layout-gap-large">
-        <hgroup class="center">
-          <h2 class="bold center secondary">Partnership</h2>
-          <p class="center">Our trusted partners !</p>
-        </hgroup>
-        <div class="grid-3" style="width: 100%">
-          <div class="image-placeholder"></div>
-          <div class="image-placeholder"></div>
-          <div class="image-placeholder"></div>
+      <div class="dashboard-row dashboard-row--actions">
+        <div
+          v-for="action in pendingActions"
+          :key="action.id"
+          class="dashboard-card dashboard-card--action"
+        >
+          <svg class="dashboard-action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
+            <path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z" />
+          </svg>
+          <p class="dashboard-action-title">{{ action.title }}</p>
+          <p class="dashboard-action-desc">{{ action.description }}</p>
+          <RouterLink :to="action.link" class="dashboard-action-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
+              <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z" />
+            </svg>
+          </RouterLink>
         </div>
       </div>
-    </section>
 
-    <!-- Contact -->
-    <section>
-      <div class="container">
-        <div class="card grid-2">
-          <div class="layout-flex layout-columns layout-gap-large">
-            <hgroup>
-              <h2 class="bold secondary">Contact us</h2>
-              <p class="left">Consectetuer adipiscing lorem risus iortipps frcits ghcorh gug rii</p>
-            </hgroup>
-            <form>
-              <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="primary medium full-width" placeholder="Name" />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  class="primary medium full-width"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div class="form-group">
-                <label>Message</label>
-                <textarea
-                  class="primary medium full-width"
-                  placeholder="Type your message here"
-                ></textarea>
-              </div>
-              <button type="submit" class="primary medium">Get started</button>
-            </form>
-          </div>
-          <div class="image-placeholder" style="align-self: stretch; min-height: 360px"></div>
-        </div>
+      <div class="dashboard-card dashboard-card--activity">
+        <h2 class="dashboard-activity-title">Flux d'activité Récente</h2>
+        <ul class="dashboard-activity-list">
+          <li v-for="log in activityLogs" :key="log.id" class="dashboard-activity-item">
+            <div class="dashboard-activity-avatar"></div>
+            <span class="dashboard-activity-text"> {{ log.adminName }} - {{ log.action }} </span>
+          </li>
+        </ul>
       </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-nav">
-        <div class="logo">
-          <span>UpcycleConnect</span>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p class="left">© 2026 Alternex. All rights reserved.</p>
-        <div class="layout-flex layout-gap-medium layout-items-center">
-          <a class="ghost small">Privacy Policy</a>
-          <a class="ghost small">Terms of Service</a>
-          <a class="ghost small">Cookie Settings</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+    </main>
+  </div>
 </template>

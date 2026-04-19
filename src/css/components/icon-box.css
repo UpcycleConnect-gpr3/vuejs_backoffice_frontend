@@ -1,0 +1,15 @@
+.icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: oklch(from var(--white) l c h / 0.08);
+    flex-shrink: 0;
+
+    svg {
+        width: 28px;
+        height: 28px;
+        color: var(--foreground-color);
+    }
+}
