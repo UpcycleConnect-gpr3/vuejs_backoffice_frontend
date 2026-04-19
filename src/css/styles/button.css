@@ -135,6 +135,17 @@ button {
         --button-focus-outline-color: var(--destructive-color);
     }
 
+    &.success {
+        --button-hover-bg-color: oklch(from var(--success-color) l c h / 0.15);
+        --button-hover-text-color: var(--success-color);
+        --button-hover-border-color: var(--success-color);
+
+        --button-active-bg-color: oklch(from var(--success-color) l c h / 0.25);
+        --button-active-text-color: var(--success-color);
+
+        --button-focus-outline-color: var(--success-color);
+    }
+
     &.small {
         --button-height: var(--height-small);
         --button-font-size: var(--font-size-small);
