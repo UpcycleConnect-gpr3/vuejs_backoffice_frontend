@@ -58,13 +58,13 @@ export function useEvents() {
   }
 
   async function save() {
-    if (editingId.value !== null) {
+    if (editingId.value === null) {
+      const created = await createEvent(form.value)
+      events.value.unshift(created)
+    } else {
       const updated = await updateEvent(editingId.value, form.value)
       const idx = events.value.findIndex((e) => e.id === editingId.value)
       if (idx !== -1) events.value[idx] = updated
-    } else {
-      const created = await createEvent(form.value)
-      events.value.unshift(created)
     }
     closeModal()
   }
