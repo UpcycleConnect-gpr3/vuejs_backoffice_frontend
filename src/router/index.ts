@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { DashboardPage, UsersPage, PrestatairePage, CategoriesPage, EventsPage } from '@/pages'
+import { DashboardPage, UsersPage, PrestatairePage, CategoriesPage, EventsPage, LogsPage } from '@/pages'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +23,10 @@ const router = createRouter({
     {
       path: '/events',
       component: EventsPage,
+    },
+    {
+      path: '/logs',
+      component: LogsPage,
     },
   ],
 })
