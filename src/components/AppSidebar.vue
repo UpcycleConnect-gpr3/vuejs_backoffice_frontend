@@ -8,7 +8,7 @@ const navItems = [
   { label: 'Catégories', to: '/categories' },
   { label: 'Événements', to: '/events' },
   { label: 'Journaux', to: '/logs' },
-  { label: 'Demandes Dépôt', to: '/deposit-requests' },
+  { label: 'Demandes de dépôt', to: '/deposit-requests' },
   { label: 'Paramètres', to: '/settings' },
 ]
 </script>
