@@ -3,4 +3,11 @@ div.form-group {
     display: flex;
     flex-direction: var(--form-group-flex-direction);
     gap: var(--form-group-gap);
+
+    > label {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-small);
+        width: 100%;
+    }
 }
