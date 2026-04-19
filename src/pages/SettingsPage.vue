@@ -1,4 +1,4 @@
-c<script setup lang="ts">
+<script setup lang="ts">
 import AppSidebar from '@/components/AppSidebar.vue'
 import { useSettings } from '@/composables/useSettings'
 
