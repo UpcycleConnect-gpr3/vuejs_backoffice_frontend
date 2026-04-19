@@ -18,4 +18,14 @@
         background-color: oklch(from var(--destructive-color) l c h / 0.15);
         color: var(--destructive-color);
     }
+
+    &.badge--warning {
+        background-color: oklch(from var(--warning-color) l c h / 0.15);
+        color: var(--warning-color);
+    }
+
+    &.badge--info {
+        background-color: oklch(from var(--information-color) l c h / 0.15);
+        color: var(--information-color);
+    }
 }
