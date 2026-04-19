@@ -3,13 +3,13 @@ import { RouterLink } from 'vue-router'
 
 const navItems = [
   { label: 'Tableau de bord', to: '/' },
-  { label: 'Utilisateur', to: '/utilisateur' },
-  { label: 'Prestataire', to: '/prestataire' },
-  { label: 'Catégorie', to: '/categorie' },
-  { label: 'Evenement', to: '/evenement' },
-  { label: 'Journaux', to: '/journaux' },
-  { label: 'Demandes Dépôt', to: '/demandes-depot' },
-  { label: 'Paramètre', to: '/parametre' },
+  { label: 'Utilisateurs', to: '/users' },
+  { label: 'Prestataires', to: '/providers' },
+  { label: 'Catégories', to: '/categories' },
+  { label: 'Événements', to: '/events' },
+  { label: 'Journaux', to: '/logs' },
+  { label: 'Demandes Dépôt', to: '/deposit-requests' },
+  { label: 'Paramètres', to: '/settings' },
 ]
 </script>
 
