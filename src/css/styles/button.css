@@ -42,7 +42,6 @@ button {
     --button-outline-transition-duration: 0.4s;
     --button-outline-transition-timing-function: ease;
 
-    /* Select - nom de variant du couleur du bouton... */
     &.primary {
         --button-bg-color: var(--primary-color);
         --button-text-color: var(--primary-foreground-color);
@@ -125,6 +124,17 @@ button {
         --button-active-outline-color: oklch(from var(--primary-color) l c h / 0.2);
     }
 
+    &.destructive {
+        --button-hover-bg-color: oklch(from var(--destructive-color) l c h / 0.15);
+        --button-hover-text-color: var(--destructive-color);
+        --button-hover-border-color: var(--destructive-color);
+
+        --button-active-bg-color: oklch(from var(--destructive-color) l c h / 0.25);
+        --button-active-text-color: var(--destructive-color);
+
+        --button-focus-outline-color: var(--destructive-color);
+    }
+
     &.small {
         --button-height: var(--height-small);
         --button-font-size: var(--font-size-small);
@@ -148,6 +158,10 @@ button {
         --button-width: var(--height-small);
         --button-font-size: var(--font-size-small);
         --button-focus-outline-width: var(--outline-width-small);
+        --button-padding-top: var(--padding-small);
+        --button-padding-bottom: var(--padding-small);
+        --button-padding-left: var(--padding-small);
+        --button-padding-right: var(--padding-small);
     }
 
     &.medium-square {
