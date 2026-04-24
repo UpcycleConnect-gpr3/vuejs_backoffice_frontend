@@ -6,8 +6,64 @@
     gap: var(--sidebar-gap);
     padding: var(--sidebar-padding);
     background-color: var(--sidebar-bg-color);
+    border-right: 1px solid var(--sidebar-border-color);
     flex-shrink: 0;
-    transition: width 0.3s ease;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    transition: width var(--transition-base);
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--green-700); }
+
+/* ─── Logo block ────────────────────────────────────────────────────────── */
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-4);
+    font-weight: var(--font-weight-black);
+    font-size: var(--font-size-large);
+    color: var(--foreground-color);
+    letter-spacing: -0.03em;
+    border-bottom: 1px solid var(--sidebar-border-color);
+    margin: calc(-1 * var(--sidebar-padding)) calc(-1 * var(--sidebar-padding)) 0;
+}
+
+.sidebar-logo .logo-dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--lime-500);
+    flex-shrink: 0;
+}
+
+/* ─── Nav structure ─────────────────────────────────────────────────────── */
+
+.sidebar-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    flex: 1;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.sidebar-section-title {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    padding: 0 var(--space-3);
+    margin-bottom: var(--space-1);
 }
 
 .sidebar-nav {
@@ -18,77 +74,121 @@
 }
 
 .sidebar-nav-item > a {
+    position: relative;
     display: flex;
     align-items: center;
-    padding: var(--padding-small) var(--padding-medium);
-    border-radius: 0;
+    gap: var(--space-3);
+    padding: var(--space-3);
     color: var(--sidebar-nav-item-color);
     text-decoration: none;
     font-size: var(--font-size-small);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.005em;
     opacity: var(--sidebar-nav-item-opacity);
-    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-
-    &:hover {
-        opacity: 1;
-        background-color: var(--sidebar-nav-item-hover-bg);
-    }
-
-    &.router-link-active,
-    &.router-link-exact-active {
-        opacity: 1;
-        color: var(--sidebar-nav-item-active-color);
-        background-color: var(--sidebar-nav-item-active-bg);
-    }
+    transition: background-color var(--transition-base), color var(--transition-base);
 }
 
-/* ─── Sidebar logo ──────────────────────────────────────────────────────── */
-
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    padding: var(--padding-small) var(--padding-medium);
+.sidebar-nav-item > a:hover {
+    color: var(--sidebar-nav-item-hover-color);
+    background-color: var(--sidebar-nav-item-hover-bg);
 }
 
-.sidebar-logo-img {
-    width: 56px;
-    height: 56px;
-    object-fit: contain;
+.sidebar-nav-item > a.router-link-active,
+.sidebar-nav-item > a.router-link-exact-active {
+    color: var(--sidebar-nav-item-active-color);
+    background-color: var(--sidebar-nav-item-active-bg);
+    font-weight: var(--font-weight-semibold);
 }
 
-/* ─── Sidebar user block (bottom) ───────────────────────────────────────── */
+.sidebar-nav-item > a.router-link-active::before,
+.sidebar-nav-item > a.router-link-exact-active::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--sidebar-padding));
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--lime-500);
+}
+
+.sidebar-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ─── User block ────────────────────────────────────────────────────────── */
 
 .sidebar-user {
     margin-top: auto;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--gap-medium);
-    padding: var(--padding-small) var(--padding-medium);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-top: 1px solid var(--sidebar-border-color);
+    margin-inline: calc(-1 * var(--sidebar-padding));
+    padding-inline: var(--space-4);
 }
 
 .sidebar-user-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 0;
-    background-color: oklch(from var(--white) l c h / 0.25);
+    background-color: var(--lime-500);
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-black);
+    font-size: var(--font-size-xs);
     flex-shrink: 0;
+    letter-spacing: 0;
 }
 
 .sidebar-user-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
+    flex: 1;
 }
 
 .sidebar-user-name {
     font-size: var(--font-size-small);
-    font-weight: 600;
-    color: var(--primary-foreground-color);
+    font-weight: var(--font-weight-semibold);
+    color: var(--foreground-color);
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .sidebar-user-role {
-    font-size: var(--font-size-small);
-    color: var(--secondary-color);
-    opacity: 0.85;
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+}
+
+.sidebar-user-action {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color var(--transition-base), background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.sidebar-user-action:hover {
+    color: var(--destructive-color);
+    background-color: oklch(from var(--destructive-color) l c h / 0.1);
+    border-color: oklch(from var(--destructive-color) l c h / 0.3);
+}
+
+.sidebar-user-action svg {
+    width: 16px;
+    height: 16px;
 }
