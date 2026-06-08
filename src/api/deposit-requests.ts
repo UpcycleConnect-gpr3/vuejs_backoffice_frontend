@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
+// NO BACKEND EXISTS for deposit requests. The data stays MOCKED in
+// useDepositRequests (données de démonstration). The functions below reject /
+// no-op on purpose so the composable's try/catch falls back to mock data.
+// Do NOT invent endpoints here.
 
 export type DepositStatus = 'en-attente' | 'validee' | 'fermee'
 
@@ -13,18 +16,14 @@ export interface DepositRequest {
   createdAt: string
 }
 
-export async function fetchDepositRequests(): Promise<DepositRequest[]> {
-  const res = await fetch(`${BASE_URL}/api/deposit-requests`)
-  if (!res.ok) throw new Error('Failed to fetch deposit requests')
-  return res.json()
+export function fetchDepositRequests(): Promise<DepositRequest[]> {
+  return Promise.reject(new Error('No backend endpoint for deposit requests — using mock data'))
 }
 
-export async function updateDepositStatus(id: number, status: DepositStatus): Promise<DepositRequest> {
-  const res = await fetch(`${BASE_URL}/api/deposit-requests/${id}/status`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status }),
-  })
-  if (!res.ok) throw new Error('Failed to update deposit request status')
-  return res.json()
+export function updateDepositStatus(
+  _id: number,
+  _status: DepositStatus,
+): Promise<DepositRequest | null> {
+  // No backend: handled optimistically client-side in the composable.
+  return Promise.resolve(null)
 }

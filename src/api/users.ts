@@ -1,31 +1,37 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
+import { http } from '@/api/http'
 
+// Users live on the FORUM backend (trailing slash required).
+// The forum users API exposes GET / PUT / DELETE only — there is NO POST create endpoint,
+// so user creation is not available from the backoffice.
 export interface User {
-  id: number
-  name: string
+  id: string
+  username: string
+  firstname: string
+  lastname: string
   email: string
-  role: 'admin' | 'user' | 'prestataire'
-  status: 'actif' | 'inactif' | 'suspendu'
-  createdAt: string
+  created_at: string
+  updated_at: string
 }
 
-export async function fetchUsers(): Promise<User[]> {
-  const res = await fetch(`${BASE_URL}/api/users`)
-  if (!res.ok) throw new Error('Failed to fetch users')
-  return res.json()
+// UpdateUserDTO accepts ONLY these fields — email is read-only on this endpoint.
+export interface UserPayload {
+  username: string
+  firstname: string
+  lastname: string
 }
 
-export async function deleteUser(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/api/users/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('Failed to delete user')
+export function fetchUsers(): Promise<User[]> {
+  return http<User[]>('forum', '/users/')
 }
 
-export async function updateUserStatus(id: number, status: User['status']): Promise<User> {
-  const res = await fetch(`${BASE_URL}/api/users/${id}/status`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status }),
-  })
-  if (!res.ok) throw new Error('Failed to update user status')
-  return res.json()
+export function fetchUser(id: string): Promise<User> {
+  return http<User>('forum', `/users/${id}/`)
+}
+
+export function updateUser(id: string, data: UserPayload): Promise<User> {
+  return http<User>('forum', `/users/${id}/`, { method: 'PUT', body: JSON.stringify(data) })
+}
+
+export function deleteUser(id: string): Promise<void> {
+  return http<void>('forum', `/users/${id}/`, { method: 'DELETE' })
 }

@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
+// NO BACKEND EXISTS for "prestataires" as a dedicated resource. The data stays
+// MOCKED in usePrestataires (données de démonstration). The functions below
+// reject / no-op on purpose so the composable's try/catch falls back to mock
+// data. Do NOT invent endpoints here.
 
 export interface Prestataire {
   id: number
@@ -12,23 +15,23 @@ export interface Prestataire {
   createdAt: string
 }
 
-export async function fetchPrestataires(): Promise<Prestataire[]> {
-  const res = await fetch(`${BASE_URL}/api/prestataires`)
-  if (!res.ok) throw new Error('Failed to fetch prestataires')
-  return res.json()
+export type PrestatairePayload = Partial<Omit<Prestataire, 'id' | 'createdAt'>>
+
+const NO_BACKEND = 'No backend endpoint for prestataires — using mock data'
+
+export function fetchPrestataires(): Promise<Prestataire[]> {
+  return Promise.reject(new Error(NO_BACKEND))
 }
 
-export async function deletePrestataire(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/api/prestataires/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('Failed to delete prestataire')
+export function deletePrestataire(_id: number): Promise<void> {
+  // No backend: handled optimistically client-side in the composable.
+  return Promise.resolve()
 }
 
-export async function updatePrestataire(id: number, data: Partial<Prestataire>): Promise<Prestataire> {
-  const res = await fetch(`${BASE_URL}/api/prestataires/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) throw new Error('Failed to update prestataire')
-  return res.json()
+export function updatePrestataire(
+  _id: number,
+  _data: PrestatairePayload,
+): Promise<Prestataire | null> {
+  // No backend: handled optimistically client-side in the composable.
+  return Promise.resolve(null)
 }

@@ -10,3 +10,9 @@ export { default as TalksPage } from './TalksPage.vue'
 export { default as ProjectsPage } from './ProjectsPage.vue'
 export { default as TrainingsPage } from './TrainingsPage.vue'
 export { default as ObjectsPage } from './ObjectsPage.vue'
+
+// Staff (animateurs / formateurs)
+export { default as MyTrainingsPage } from './staff/MyTrainingsPage.vue'
+export { default as PlanningPage } from './staff/PlanningPage.vue'
+export { default as AdvicePage } from './staff/AdvicePage.vue'
+export { default as ModerationPage } from './staff/ModerationPage.vue'

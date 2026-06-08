@@ -1,44 +1,28 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
+import { http } from '@/api/http'
 
+// Events live on the FORUM backend (trailing slash required).
+// The backend Event model is minimal: only { id, title, date } exist.
+// There is no description, location, start/end date, or status field.
 export interface Event {
   id: number
   title: string
-  description: string
-  location: string
-  startDate: string
-  endDate: string
-  status: 'en-cours' | 'a-venir' | 'termine'
+  date: string
 }
 
 export type EventPayload = Omit<Event, 'id'>
 
-export async function fetchEvents(): Promise<Event[]> {
-  const res = await fetch(`${BASE_URL}/api/events`)
-  if (!res.ok) throw new Error('Failed to fetch events')
-  return res.json()
+export function fetchEvents(): Promise<Event[]> {
+  return http<Event[]>('forum', '/events/')
 }
 
-export async function createEvent(data: EventPayload): Promise<Event> {
-  const res = await fetch(`${BASE_URL}/api/events`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) throw new Error('Failed to create event')
-  return res.json()
+export function createEvent(data: EventPayload): Promise<Event> {
+  return http<Event>('forum', '/events/', { method: 'POST', body: JSON.stringify(data) })
 }
 
-export async function updateEvent(id: number, data: Partial<EventPayload>): Promise<Event> {
-  const res = await fetch(`${BASE_URL}/api/events/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) throw new Error('Failed to update event')
-  return res.json()
+export function updateEvent(id: number, data: Partial<EventPayload>): Promise<Event> {
+  return http<Event>('forum', `/events/${id}/`, { method: 'PUT', body: JSON.stringify(data) })
 }
 
-export async function deleteEvent(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/api/events/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('Failed to delete event')
+export function deleteEvent(id: number): Promise<void> {
+  return http<void>('forum', `/events/${id}/`, { method: 'DELETE' })
 }

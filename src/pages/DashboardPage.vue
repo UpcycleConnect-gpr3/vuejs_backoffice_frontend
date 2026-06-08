@@ -1,14 +1,43 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Pie } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import AppSidebar from '@/components/AppSidebar.vue'
 import { useDashboard } from '@/composables/useDashboard'
+import { useToasts } from '@/stores/toasts'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const { stats, pendingActions, activityLogs } = useDashboard()
+const router = useRouter()
+const toasts = useToasts()
+
+const showCreateMenu = ref(false)
+
+// Client-side CSV export of the current activity feed.
+function exportCsv() {
+  const rows = [
+    ['id', 'admin', 'action', 'date'],
+    ...activityLogs.value.map((l) => [String(l.id), l.adminName, l.action, l.createdAt]),
+  ]
+  const csv = rows
+    .map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'activite.csv'
+  a.click()
+  URL.revokeObjectURL(url)
+  toasts.success('Export CSV généré')
+}
+
+function goCreate(path: string) {
+  showCreateMenu.value = false
+  router.push(path)
+}
 
 const chartData = computed(() => ({
   labels: stats.value.prestatairesDistribution.labels,
@@ -47,9 +76,55 @@ const chartOptions = {
           <span class="eyebrow">Overview</span>
           <h1 class="dashboard-title">Tableau de bord</h1>
         </div>
-        <div class="layout-flex layout-gap-medium">
-          <button class="ghost medium">Export</button>
-          <button class="primary medium">+ Nouveau</button>
+        <div class="layout-flex layout-gap-medium" style="position: relative">
+          <button class="ghost medium" @click="exportCsv">Export</button>
+          <button class="primary medium" @click="showCreateMenu = !showCreateMenu">
+            + Nouveau
+          </button>
+          <div
+            v-if="showCreateMenu"
+            style="
+              position: absolute;
+              top: calc(100% + 4px);
+              right: 0;
+              z-index: 50;
+              display: flex;
+              flex-direction: column;
+              min-width: 200px;
+              background-color: var(--background-color);
+              border: var(--border-width-layout) var(--border-style-layout)
+                oklch(from var(--white) l c h / 0.15);
+            "
+          >
+            <button
+              class="ghost small"
+              style="justify-content: flex-start"
+              @click="goCreate('/events')"
+            >
+              Nouvel événement
+            </button>
+            <button
+              class="ghost small"
+              style="justify-content: flex-start"
+              @click="goCreate('/categories')"
+            >
+              Nouvelle catégorie
+            </button>
+            <button
+              class="ghost small"
+              style="justify-content: flex-start"
+              @click="goCreate('/trainings')"
+            >
+              Nouvelle formation
+            </button>
+            <button
+              class="ghost small"
+              style="justify-content: flex-start"
+              @click="goCreate('/objects')"
+            >
+              Nouvel objet
+            </button>
+          </div>
         </div>
       </header>
 
@@ -112,8 +187,8 @@ const chartOptions = {
           <ul class="dashboard-activity-list">
             <li v-for="log in activityLogs" :key="log.id" class="dashboard-activity-item">
               <div class="dashboard-activity-avatar"></div>
-              <div class="layout-flex layout-columns" style="gap: 2px; flex: 1; min-width: 0;">
-                <span class="small" style="font-weight: 500;">{{ log.adminName }}</span>
+              <div class="layout-flex layout-columns" style="gap: 2px; flex: 1; min-width: 0">
+                <span class="small" style="font-weight: 500">{{ log.adminName }}</span>
                 <span class="tiny muted">{{ log.action }}</span>
               </div>
             </li>
@@ -131,8 +206,15 @@ const chartOptions = {
             :to="action.link"
             class="dashboard-card dashboard-card--action"
           >
-            <svg class="dashboard-action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
-              <path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Z" />
+            <svg
+              class="dashboard-action-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              fill="currentColor"
+            >
+              <path
+                d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Z"
+              />
             </svg>
             <p class="dashboard-action-title">{{ action.title }}</p>
             <p class="dashboard-action-desc">{{ action.description }}</p>
