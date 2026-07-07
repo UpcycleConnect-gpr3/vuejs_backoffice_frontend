@@ -76,6 +76,10 @@ export async function http<T>(
   if (token && !headers.has('Authorization')) {
     headers.set('Authorization', token)
   }
+  // Le backend forum exige le header X-Container-Name (middleware Container("app")).
+  if (backend === 'forum' && !headers.has('X-Container-Name')) {
+    headers.set('X-Container-Name', 'app')
+  }
 
   const res = await fetch(url, { ...options, headers })
 
