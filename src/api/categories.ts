@@ -1,30 +1,34 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
+import { http } from '@/api/http'
 
+// Categories live on the FORUM backend (trailing slash required).
 export interface Category {
   id: number
   name: string
-  slug: string
-  objectCount: number
-  createdAt: string
+  description: string
+  created_at: string
+  updated_at: string
 }
 
-export async function fetchCategories(): Promise<Category[]> {
-  const res = await fetch(`${BASE_URL}/api/categories`)
-  if (!res.ok) throw new Error('Failed to fetch categories')
-  return res.json()
+export interface CategoryPayload {
+  name: string
+  description: string
 }
 
-export async function deleteCategory(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/api/categories/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('Failed to delete category')
+export function fetchCategories(): Promise<Category[]> {
+  return http<Category[]>('forum', '/categories/')
 }
 
-export async function updateCategory(id: number, data: Partial<Category>): Promise<Category> {
-  const res = await fetch(`${BASE_URL}/api/categories/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+export function createCategory(data: CategoryPayload): Promise<Category> {
+  return http<Category>('forum', '/categories/', { method: 'POST', body: JSON.stringify(data) })
+}
+
+export function updateCategory(id: number, data: Partial<CategoryPayload>): Promise<Category> {
+  return http<Category>('forum', `/categories/${id}/`, {
+    method: 'PUT',
     body: JSON.stringify(data),
   })
-  if (!res.ok) throw new Error('Failed to update category')
-  return res.json()
+}
+
+export function deleteCategory(id: number): Promise<void> {
+  return http<void>('forum', `/categories/${id}/`, { method: 'DELETE' })
 }

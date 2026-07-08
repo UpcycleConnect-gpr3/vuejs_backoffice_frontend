@@ -2,7 +2,7 @@
 import AppSidebar from '@/components/AppSidebar.vue'
 import { useSettings } from '@/composables/useSettings'
 
-const { locale, account, setLocale, saveAccount } = useSettings()
+const { locale, account, setLocale, saveAccount, accountSaveAvailable } = useSettings()
 </script>
 
 <template>
@@ -12,32 +12,59 @@ const { locale, account, setLocale, saveAccount } = useSettings()
     <main class="dashboard-main">
       <h1 class="dashboard-title">Paramètres</h1>
 
-      <div class="dashboard-card" style="display: flex; flex-direction: column; gap: var(--gap-large); max-width: 560px;">
+      <div
+        class="dashboard-card"
+        style="display: flex; flex-direction: column; gap: var(--gap-large); max-width: 560px"
+      >
         <div>
-          <p style="font-weight: 500; font-size: var(--font-size-medium);">Langue</p>
-          <p style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.5); margin-top: 4px;">
+          <p style="font-weight: 500; font-size: var(--font-size-medium)">Langue</p>
+          <p
+            style="
+              font-size: var(--font-size-small);
+              color: oklch(from var(--white) l c h / 0.5);
+              margin-top: 4px;
+            "
+          >
             Choisissez la langue de l'interface.
           </p>
         </div>
-        <div style="display: flex; gap: var(--gap-medium);">
-          <button :class="['small', locale === 'fr' ? 'secondary' : 'outline']" @click="setLocale('fr')">
+        <div style="display: flex; gap: var(--gap-medium)">
+          <button
+            :class="['small', locale === 'fr' ? 'secondary' : 'outline']"
+            @click="setLocale('fr')"
+          >
             Français
           </button>
-          <button :class="['small', locale === 'en' ? 'secondary' : 'outline']" @click="setLocale('en')">
+          <button
+            :class="['small', locale === 'en' ? 'secondary' : 'outline']"
+            @click="setLocale('en')"
+          >
             English
           </button>
         </div>
       </div>
 
-      <div class="dashboard-card" style="display: flex; flex-direction: column; gap: var(--gap-large); max-width: 560px;">
+      <div
+        class="dashboard-card"
+        style="display: flex; flex-direction: column; gap: var(--gap-large); max-width: 560px"
+      >
         <div>
-          <p style="font-weight: 500; font-size: var(--font-size-medium);">Mon compte</p>
-          <p style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.5); margin-top: 4px;">
+          <p style="font-weight: 500; font-size: var(--font-size-medium)">Mon compte</p>
+          <p
+            style="
+              font-size: var(--font-size-small);
+              color: oklch(from var(--white) l c h / 0.5);
+              margin-top: 4px;
+            "
+          >
             Modifiez vos informations personnelles.
           </p>
         </div>
 
-        <form style="display: flex; flex-direction: column; gap: var(--gap-large);" @submit.prevent="saveAccount">
+        <form
+          style="display: flex; flex-direction: column; gap: var(--gap-large)"
+          @submit.prevent="saveAccount"
+        >
           <div class="form-group">
             <label>
               Nom
@@ -52,7 +79,7 @@ const { locale, account, setLocale, saveAccount } = useSettings()
             </label>
           </div>
 
-          <div style="height: 1px; background-color: oklch(from var(--white) l c h / 0.1);"></div>
+          <div style="height: 1px; background-color: oklch(from var(--white) l c h / 0.1)"></div>
 
           <div class="form-group">
             <label>
@@ -68,8 +95,16 @@ const { locale, account, setLocale, saveAccount } = useSettings()
             </label>
           </div>
 
-          <div>
-            <button type="submit" class="secondary small">Enregistrer</button>
+          <div style="display: flex; align-items: center; gap: var(--gap-medium)">
+            <button type="submit" class="secondary small" :disabled="!accountSaveAvailable">
+              Enregistrer
+            </button>
+            <span
+              v-if="!accountSaveAvailable"
+              style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.5)"
+            >
+              Bientôt disponible (aucun endpoint backend)
+            </span>
           </div>
         </form>
       </div>
