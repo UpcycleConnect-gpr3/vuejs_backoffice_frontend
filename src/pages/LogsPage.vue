@@ -11,6 +11,7 @@ const actionLabels: Record<LogAction, string> = {
   delete: 'Suppression',
   login: 'Connexion',
   logout: 'Déconnexion',
+  notify: 'Notification',
 }
 
 const resourceLabels: Record<LogResource, string> = {

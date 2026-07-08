@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppModal from '@/components/AppModal.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useUsers } from '@/composables/useUsers'
+import { sendNotification } from '@/api/notifications'
+import { useToasts } from '@/stores/toasts'
+import type { User } from '@/api/users'
 
 const {
   filtered,
@@ -21,6 +25,34 @@ const {
   cancelRemove,
   confirmRemove,
 } = useUsers()
+
+const toasts = useToasts()
+
+// Envoi d'une notification à un utilisateur.
+const showNotify = ref(false)
+const notifyUser = ref<User | null>(null)
+const notifyForm = ref({ title: '', body: '' })
+const notifySending = ref(false)
+
+function openNotify(user: User) {
+  notifyUser.value = user
+  notifyForm.value = { title: '', body: '' }
+  showNotify.value = true
+}
+
+async function submitNotify() {
+  if (!notifyUser.value || !notifyForm.value.title.trim()) return
+  notifySending.value = true
+  try {
+    await sendNotification(notifyUser.value.id, notifyForm.value.title, notifyForm.value.body)
+    toasts.success('Notification envoyée')
+    showNotify.value = false
+  } catch {
+    toasts.error("Échec de l'envoi (rôle responsable requis)")
+  } finally {
+    notifySending.value = false
+  }
+}
 
 function initials(firstname: string, lastname: string) {
   return `${firstname?.[0] ?? ''}${lastname?.[0] ?? ''}`.toUpperCase() || '?'
@@ -108,6 +140,19 @@ function formatDate(iso: string) {
                     >
                       <path
                         d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"
+                      />
+                    </svg>
+                  </button>
+                  <button class="small-square ghost" title="Notifier" @click="openNotify(user)">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 256 256"
+                      fill="currentColor"
+                      width="16"
+                      height="16"
+                    >
+                      <path
+                        d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216Z"
                       />
                     </svg>
                   </button>
@@ -219,4 +264,33 @@ function formatDate(iso: string) {
     @confirm="confirmRemove"
     @cancel="cancelRemove"
   />
+
+  <AppModal
+    :open="showNotify"
+    :title="notifyUser ? `Notifier ${notifyUser.username}` : 'Notifier'"
+    @close="showNotify = false"
+  >
+    <div class="form-group">
+      <label class="required">
+        Titre
+        <input v-model="notifyForm.title" type="text" placeholder="Titre de la notification" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        Message
+        <textarea v-model="notifyForm.body" rows="4" style="resize: vertical"></textarea>
+      </label>
+    </div>
+    <template #footer>
+      <button class="ghost small" @click="showNotify = false">Annuler</button>
+      <button
+        class="secondary small"
+        :disabled="notifySending || !notifyForm.title.trim()"
+        @click="submitNotify"
+      >
+        {{ notifySending ? 'Envoi…' : 'Envoyer' }}
+      </button>
+    </template>
+  </AppModal>
 </template>

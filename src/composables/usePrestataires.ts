@@ -1,107 +1,78 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import {
   fetchPrestataires,
-  deletePrestataire,
+  createPrestataire,
   updatePrestataire,
+  deletePrestataire,
   type Prestataire,
   type PrestatairePayload,
 } from '@/api/prestataires'
 import { useToasts } from '@/stores/toasts'
 
-// NOTE: no dedicated backend exists for prestataires — data is mocked
-// (données de démonstration) and edits are applied optimistically client-side.
-const MOCK: Prestataire[] = [
-  {
-    id: 1,
-    name: 'Atelier Vert',
-    siret: '12345678900010',
-    contactName: 'Jean Dupont',
-    contactEmail: 'jean@ateliervert.fr',
-    contactPhone: '0612345678',
-    categorie: null,
-    status: 'actif',
-    createdAt: '2024-01-15T10:00:00Z',
-  },
-  {
-    id: 2,
-    name: 'RecycloTech',
-    siret: '98765432100023',
-    contactName: 'Marie Lebon',
-    contactEmail: 'marie@recyclotech.fr',
-    contactPhone: '0698765432',
-    categorie: null,
-    status: 'actif',
-    createdAt: '2024-02-20T09:00:00Z',
-  },
-  {
-    id: 3,
-    name: 'EcoRestore',
-    siret: '55544433300001',
-    contactName: 'Paul Girard',
-    contactEmail: 'paul@ecorestore.fr',
-    contactPhone: '0655544433',
-    categorie: null,
-    status: 'inactif',
-    createdAt: '2024-03-10T14:00:00Z',
-  },
-]
-
 const emptyForm = (): PrestatairePayload => ({
   name: '',
-  siret: '',
-  contactName: '',
-  contactEmail: '',
-  contactPhone: '',
-  categorie: null,
-  status: 'actif',
+  type: '',
+  email: '',
+  phone: '',
+  city: '',
+  status: 'active',
 })
 
 export function usePrestataires() {
   const toasts = useToasts()
-  const prestataires = ref<Prestataire[]>(MOCK)
+  const prestataires = ref<Prestataire[]>([])
   const loading = ref(false)
-  const error = ref<string | null>(null)
   const search = ref('')
 
   const showModal = ref(false)
   const editingId = ref<number | null>(null)
   const form = ref<PrestatairePayload>(emptyForm())
-
   const confirmId = ref<number | null>(null)
 
-  const filtered = computed(() =>
-    prestataires.value.filter((p) => {
-      const q = search.value.toLowerCase()
-      return (
-        p.name.toLowerCase().includes(q) ||
-        p.siret.includes(q) ||
-        p.contactName.toLowerCase().includes(q) ||
-        p.contactEmail.toLowerCase().includes(q)
-      )
-    }),
+  const page = ref(1)
+  const pageSize = 10
+
+  const filtered = computed(() => {
+    const q = search.value.trim().toLowerCase()
+    if (!q) return prestataires.value
+    return prestataires.value.filter((p) =>
+      `${p.name} ${p.type} ${p.city} ${p.email}`.toLowerCase().includes(q),
+    )
+  })
+
+  const paginated = computed(() =>
+    filtered.value.slice((page.value - 1) * pageSize, page.value * pageSize),
   )
+
+  watch(search, () => {
+    page.value = 1
+  })
 
   async function load() {
     loading.value = true
-    error.value = null
     try {
       prestataires.value = await fetchPrestataires()
     } catch {
-      // No backend — keep mock data.
+      toasts.error('Impossible de charger les prestataires.')
     } finally {
       loading.value = false
     }
+  }
+
+  function openCreate() {
+    editingId.value = null
+    form.value = emptyForm()
+    showModal.value = true
   }
 
   function openEdit(p: Prestataire) {
     editingId.value = p.id
     form.value = {
       name: p.name,
-      siret: p.siret,
-      contactName: p.contactName,
-      contactEmail: p.contactEmail,
-      contactPhone: p.contactPhone,
-      categorie: p.categorie,
+      type: p.type,
+      email: p.email,
+      phone: p.phone,
+      city: p.city,
       status: p.status,
     }
     showModal.value = true
@@ -112,19 +83,18 @@ export function usePrestataires() {
   }
 
   async function save() {
-    if (editingId.value === null) return
     try {
-      const updated = await updatePrestataire(editingId.value, form.value)
-      const idx = prestataires.value.findIndex((p) => p.id === editingId.value)
-      const existing = prestataires.value[idx]
-      if (existing) {
-        prestataires.value[idx] = updated ?? { ...existing, ...form.value }
+      if (editingId.value === null) {
+        await createPrestataire(form.value)
+        toasts.success('Prestataire créé')
+      } else {
+        await updatePrestataire(editingId.value, form.value)
+        toasts.success('Prestataire mis à jour')
       }
-      toasts.success('Prestataire mis à jour')
-    } catch {
-      toasts.error('Échec de la mise à jour')
-    } finally {
       closeModal()
+      await load()
+    } catch {
+      toasts.error('Échec de l’enregistrement du prestataire')
     }
   }
 
@@ -141,8 +111,8 @@ export function usePrestataires() {
     const id = confirmId.value
     try {
       await deletePrestataire(id)
-      prestataires.value = prestataires.value.filter((p) => p.id !== id)
       toasts.success('Prestataire supprimé')
+      await load()
     } catch {
       toasts.error('Échec de la suppression')
     } finally {
@@ -153,14 +123,18 @@ export function usePrestataires() {
   onMounted(load)
 
   return {
+    prestataires,
     filtered,
+    paginated,
     loading,
-    error,
     search,
+    page,
+    pageSize,
     showModal,
     editingId,
     form,
     confirmId,
+    openCreate,
     openEdit,
     closeModal,
     save,

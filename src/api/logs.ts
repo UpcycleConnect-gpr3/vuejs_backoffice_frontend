@@ -1,9 +1,7 @@
-// NO BACKEND EXISTS for activity logs. The data stays MOCKED in useLogs
-// (données de démonstration). fetchLogs rejects on purpose so the composable's
-// try/catch falls back to the mock data. Do NOT invent an endpoint here.
+import { http } from '@/api/http'
 
-export type LogAction = 'create' | 'update' | 'delete' | 'login' | 'logout'
-export type LogResource = 'user' | 'prestataire' | 'category' | 'event' | 'auth'
+export type LogAction = 'create' | 'update' | 'delete' | 'login' | 'logout' | 'notify'
+export type LogResource = 'user' | 'prestataire' | 'category' | 'event' | 'auth' | string
 
 export interface Log {
   id: number
@@ -15,6 +13,27 @@ export interface Log {
   createdAt: string
 }
 
-export function fetchLogs(): Promise<Log[]> {
-  return Promise.reject(new Error('No backend endpoint for logs — using mock data'))
+// Forme réelle renvoyée par le backend upcycle (GET /logs).
+interface ActivityLog {
+  id: number
+  user_id: string
+  action: string
+  entity: string
+  entity_id: string
+  detail: string
+  created_at: string
+}
+
+// Journal d'activité REEL (backend upcycle, role administrator).
+export async function fetchLogs(): Promise<Log[]> {
+  const rows = await http<ActivityLog[]>('upcycle', '/logs')
+  return (rows || []).map((r) => ({
+    id: r.id,
+    adminName: r.user_id ? r.user_id.slice(0, 8) : 'système',
+    action: r.action as LogAction,
+    resource: r.entity,
+    resourceId: r.entity_id ? Number(r.entity_id) || null : null,
+    details: r.detail,
+    createdAt: r.created_at,
+  }))
 }
