@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isAdmin, redirectToLogin } from '@/auth/session'
 import {
   DashboardPage,
   UsersPage,
@@ -46,6 +47,17 @@ const router = createRouter({
     { path: '/staff/advice', component: AdvicePage },
     { path: '/staff/moderation', component: ModerationPage },
   ],
+})
+
+// Garde globale : le back office est reserve aux administrateurs connectes.
+// Sans session admin valide (cookie bearer_token, role administrator, non
+// expire), on redirige vers le portail de connexion.
+router.beforeEach(() => {
+  if (!isAdmin()) {
+    redirectToLogin()
+    return false
+  }
+  return true
 })
 
 export default router
