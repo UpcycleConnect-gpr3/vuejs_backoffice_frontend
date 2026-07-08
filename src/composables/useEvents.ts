@@ -4,6 +4,8 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
+  validateEvent,
+  rejectEvent,
   type Event,
   type EventPayload,
 } from '@/api/events'
@@ -41,6 +43,26 @@ export function useEvents() {
     } catch {
     } finally {
       loading.value = false
+    }
+  }
+
+  async function validate(id: number) {
+    try {
+      await validateEvent(id)
+      toasts.success('Événement validé')
+      await load()
+    } catch {
+      toasts.error('Validation impossible (rôle responsable requis).')
+    }
+  }
+
+  async function reject(id: number) {
+    try {
+      await rejectEvent(id)
+      toasts.success('Événement refusé')
+      await load()
+    } catch {
+      toasts.error('Action impossible (rôle responsable requis).')
     }
   }
 
@@ -113,6 +135,8 @@ export function useEvents() {
     openEdit,
     closeModal,
     save,
+    validate,
+    reject,
     askRemove,
     cancelRemove,
     confirmRemove,

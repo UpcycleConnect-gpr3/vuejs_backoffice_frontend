@@ -14,10 +14,18 @@ const {
   openEdit,
   closeModal,
   save,
+  validate,
+  reject,
   askRemove,
   cancelRemove,
   confirmRemove,
 } = useEvents()
+
+function statusMeta(status?: string): { label: string; cls: string } {
+  if (status === 'validated') return { label: 'Validé', cls: 'badge--success' }
+  if (status === 'rejected') return { label: 'Refusé', cls: 'badge--danger' }
+  return { label: 'En attente', cls: 'badge--accent' }
+}
 
 function formatDate(iso: string) {
   return iso
@@ -71,13 +79,14 @@ function formatDate(iso: string) {
             <tr>
               <th>Titre</th>
               <th>Date</th>
+              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="filtered.length === 0">
               <td
-                colspan="3"
+                colspan="4"
                 style="
                   text-align: center;
                   color: oklch(from var(--white) l c h / 0.4);
@@ -107,7 +116,29 @@ function formatDate(iso: string) {
               </td>
               <td style="font-size: var(--font-size-small)">{{ formatDate(event.date) }}</td>
               <td>
+                <span class="badge" :class="statusMeta(event.status).cls">{{
+                  statusMeta(event.status).label
+                }}</span>
+              </td>
+              <td>
                 <div style="display: flex; gap: var(--gap-small)">
+                  <button
+                    v-if="event.status !== 'validated'"
+                    class="small ghost"
+                    title="Valider"
+                    style="color: var(--lime-500, #7ac74f)"
+                    @click="validate(event.id)"
+                  >
+                    Valider
+                  </button>
+                  <button
+                    v-if="event.status !== 'rejected'"
+                    class="small ghost"
+                    title="Refuser"
+                    @click="reject(event.id)"
+                  >
+                    Refuser
+                  </button>
                   <button class="small-square ghost" title="Modifier" @click="openEdit(event)">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
