@@ -9,7 +9,9 @@ import { useToasts } from '@/stores/toasts'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const { stats, pendingActions, activityLogs } = useDashboard()
+const { stats, pendingActions, activityLogs, finance } = useDashboard()
+
+const euros = (cents: number) => (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 })
 const router = useRouter()
 const toasts = useToasts()
 
@@ -164,6 +166,30 @@ const chartOptions = {
             <span class="badge badge--muted">7 jours</span>
           </div>
           <p class="small muted">événements récents</p>
+        </div>
+      </div>
+
+      <!-- Finances (données réelles) -->
+      <div v-if="finance" class="stats-row">
+        <div class="stat-tile">
+          <span class="stat-tile-label">Revenus encaissés</span>
+          <span class="stat-tile-value">{{ euros(finance.revenue_cents) }} €</span>
+          <p class="small muted">{{ finance.paid_transactions }} transaction(s) payée(s)</p>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile-label">Commissions</span>
+          <span class="stat-tile-value">{{ euros(finance.commission_cents) }} €</span>
+          <p class="small muted">part UpcycleConnect</p>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile-label">Abonnements actifs</span>
+          <span class="stat-tile-value">{{ finance.active_subscriptions }}</span>
+          <p class="small muted">pros abonnés</p>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile-label">Catalogue</span>
+          <span class="stat-tile-value">{{ finance.objects_count }}</span>
+          <p class="small muted">{{ finance.projects_count }} projet(s)</p>
         </div>
       </div>
 
