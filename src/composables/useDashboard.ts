@@ -3,9 +3,11 @@ import {
   fetchDashboardStats,
   fetchPendingActions,
   fetchActivityLogs,
+  fetchFinanceStats,
   type DashboardStats,
   type PendingAction,
   type ActivityLog,
+  type FinanceStats,
 } from '@/api/dashboard'
 
 const MOCK_STATS: DashboardStats = {
@@ -37,6 +39,7 @@ export function useDashboard() {
   const stats = ref<DashboardStats>(MOCK_STATS)
   const pendingActions = ref<PendingAction[]>(MOCK_PENDING)
   const activityLogs = ref<ActivityLog[]>(MOCK_LOGS)
+  const finance = ref<FinanceStats | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
 
@@ -56,9 +59,15 @@ export function useDashboard() {
     } finally {
       loading.value = false
     }
+    // Synthèse financière RÉELLE (indépendante du reste, encore mocké).
+    try {
+      finance.value = await fetchFinanceStats()
+    } catch {
+      finance.value = null
+    }
   }
 
   onMounted(load)
 
-  return { stats, pendingActions, activityLogs, loading, error }
+  return { stats, pendingActions, activityLogs, finance, loading, error }
 }

@@ -9,6 +9,7 @@ export interface Object {
   score: number
   buy_by: string
   sell_by: string
+  is_ad_validated?: boolean
   created_at: string
   updated_at: string
 }

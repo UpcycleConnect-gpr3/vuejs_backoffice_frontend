@@ -45,3 +45,16 @@ export function fetchObjectProjects(id: string): Promise<ObjectProjectSummary[]>
 export function fetchObjectUsers(id: string): Promise<ObjectUserSummary[]> {
   return http<ObjectUserSummary[]>('upcycle', `/objects/${id}/users`)
 }
+
+// Validation d'une annonce par le service administratif (role administrator requis).
+export function validateObject(id: string): Promise<{ id: string; is_ad_validated: boolean }> {
+  return http<{ id: string; is_ad_validated: boolean }>('upcycle', `/objects/${id}/validate`, {
+    method: 'POST',
+  })
+}
+
+export function rejectObject(id: string): Promise<{ id: string; is_ad_validated: boolean }> {
+  return http<{ id: string; is_ad_validated: boolean }>('upcycle', `/objects/${id}/reject`, {
+    method: 'POST',
+  })
+}

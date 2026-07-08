@@ -1,3 +1,5 @@
+import { http } from '@/api/http'
+
 // NO BACKEND EXISTS for dashboard stats / pending-actions / activity-logs.
 // These endpoints are not implemented on any of the four backends, so the data
 // stays MOCKED in useDashboard (données de démonstration). The functions below
@@ -41,4 +43,18 @@ export function fetchPendingActions(): Promise<PendingAction[]> {
 
 export function fetchActivityLogs(): Promise<ActivityLog[]> {
   return Promise.reject(new Error(NO_BACKEND))
+}
+
+// Synthese financiere REELLE (backend upcycle /stats/finance, role administrator).
+export interface FinanceStats {
+  revenue_cents: number
+  commission_cents: number
+  paid_transactions: number
+  active_subscriptions: number
+  objects_count: number
+  projects_count: number
+}
+
+export function fetchFinanceStats(): Promise<FinanceStats> {
+  return http<FinanceStats>('upcycle', '/stats/finance')
 }

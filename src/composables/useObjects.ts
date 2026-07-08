@@ -4,6 +4,8 @@ import {
   createObject,
   updateObject,
   deleteObject,
+  validateObject,
+  rejectObject,
   type UpcycleObject,
   type CreateObjectRequest,
 } from '@/api/objects'
@@ -109,6 +111,26 @@ export function useObjects() {
     }
   }
 
+  async function validate(id: string) {
+    try {
+      await validateObject(id)
+      toasts.success('Annonce validée')
+      await load()
+    } catch {
+      toasts.error('Validation impossible (rôle responsable requis).')
+    }
+  }
+
+  async function reject(id: string) {
+    try {
+      await rejectObject(id)
+      toasts.success('Annonce invalidée')
+      await load()
+    } catch {
+      toasts.error('Action impossible (rôle responsable requis).')
+    }
+  }
+
   function openCreate() {
     editingId.value = null
     form.value = emptyForm()
@@ -183,6 +205,8 @@ export function useObjects() {
     openEdit,
     closeModal,
     save,
+    validate,
+    reject,
     askRemove,
     cancelRemove,
     confirmRemove,
