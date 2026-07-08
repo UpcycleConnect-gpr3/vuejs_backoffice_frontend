@@ -1,6 +1,4 @@
-// NO BACKEND EXISTS for activity logs. The data stays MOCKED in useLogs
-// (données de démonstration). fetchLogs rejects on purpose so the composable's
-// try/catch falls back to the mock data. Do NOT invent an endpoint here.
+
 
 export type LogAction = 'create' | 'update' | 'delete' | 'login' | 'logout'
 export type LogResource = 'user' | 'prestataire' | 'category' | 'event' | 'auth'

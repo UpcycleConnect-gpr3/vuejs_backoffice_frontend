@@ -1,4 +1,4 @@
-// ── API response wrapper ───────────────────────────────────────────────────
+
 
 export interface ValidationError {
   field: string
@@ -18,8 +18,6 @@ export interface ApiError {
 }
 
 export type ApiResponse<T = null> = ApiSuccess<T> | ApiError
-
-// ── Entity types ───────────────────────────────────────────────────────────
 
 export type { LoginRequest, RegisterRequest, LoginResponse } from './auth'
 export type { User } from './user'

@@ -1,6 +1,5 @@
 import { http } from '@/api/http'
 
-// Talks live on the FORUM backend (trailing slash required).
 export interface Talk {
   id: number
   title: string
@@ -11,7 +10,6 @@ export interface Talk {
   updated_at: string
 }
 
-// Create accepts { title, type, status, description }; update accepts { title, status }.
 export interface CreateTalkPayload {
   title: string
   type: string

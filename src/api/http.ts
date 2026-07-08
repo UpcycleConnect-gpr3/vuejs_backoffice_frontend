@@ -1,15 +1,4 @@
-// Typed fetch helper shared by every API module.
-//
-// Grounded backend rules (verified against backend source):
-// - Four backends, base URLs in .env (VITE_AUTH_URL / VITE_FORUM_URL / VITE_TRAINING_URL / VITE_UPCYCLE_URL).
-// - NO /api prefix. Routes live at the root.
-// - Trailing slash (Go 1.22 {$} matcher):
-//     auth / forum / training  -> EVERY path REQUIRES a trailing slash.
-//     upcycle                  -> NO trailing slash.
-// - Auth token: JWT stored in the `bearer_token` cookie (shared across *.localhost),
-//   sent as `Authorization: <token>` (NO 'Bearer ' prefix).
-// - Response envelope: success = { success: true, data: <T> } -> unwrapped to `.data`.
-//   Error = { message, status, errors? }.
+
 
 export type Backend = 'auth' | 'forum' | 'training' | 'upcycle'
 
@@ -20,7 +9,6 @@ const BASE_URLS: Record<Backend, string> = {
   upcycle: import.meta.env.VITE_UPCYCLE_URL ?? 'http://upcycle.localhost',
 }
 
-// auth / forum / training require a trailing slash, upcycle must NOT have one.
 const NEEDS_TRAILING_SLASH: Record<Backend, boolean> = {
   auth: true,
   forum: true,
@@ -45,7 +33,6 @@ function readCookie(name: string): string | null {
   return match && match[1] ? decodeURIComponent(match[1]) : null
 }
 
-// Normalise the trailing slash on the path portion only, preserving the query string.
 function normalisePath(backend: Backend, path: string): string {
   const queryIndex = path.indexOf('?')
   let pathname = queryIndex === -1 ? path : path.slice(0, queryIndex)
@@ -76,7 +63,7 @@ export async function http<T>(
   if (token && !headers.has('Authorization')) {
     headers.set('Authorization', token)
   }
-  // Le backend forum exige le header X-Container-Name (middleware Container("app")).
+
   if (backend === 'forum' && !headers.has('X-Container-Name')) {
     headers.set('X-Container-Name', 'app')
   }
@@ -93,7 +80,7 @@ export async function http<T>(
         if (Array.isArray(body.errors)) errors = body.errors
       }
     } catch {
-      // body is not JSON, keep the default message
+
     }
     throw new HttpError(message, res.status, errors)
   }
@@ -104,7 +91,7 @@ export async function http<T>(
   if (!text) return undefined as T
 
   const body = JSON.parse(text)
-  // Unwrap the { success, data } envelope when present.
+
   if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
     return body.data as T
   }

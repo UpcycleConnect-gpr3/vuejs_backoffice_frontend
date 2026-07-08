@@ -84,7 +84,6 @@ export function useDepositRequests() {
     }
   }
 
-  // No backend: update optimistically client-side (updateDepositStatus is a no-op stub).
   async function validate(id: number) {
     const updated = await updateDepositStatus(id, 'validee')
     const idx = requests.value.findIndex((r) => r.id === id)

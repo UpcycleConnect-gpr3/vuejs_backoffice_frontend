@@ -127,7 +127,6 @@ function dismiss(id: number) {
         </div>
       </header>
 
-      <!-- Stats -->
       <div class="stats-row">
         <div class="stat-tile">
           <span class="stat-tile-label">En attente</span>
@@ -150,7 +149,6 @@ function dismiss(id: number) {
         </div>
       </div>
 
-      <!-- Filters -->
       <div class="layout-flex layout-gap-small" style="flex-wrap: wrap">
         <button
           class="forum-tab"
@@ -178,7 +176,6 @@ function dismiss(id: number) {
         </button>
       </div>
 
-      <!-- Reports list -->
       <div class="layout-flex layout-columns layout-gap-medium">
         <article
           v-for="r in filtered"

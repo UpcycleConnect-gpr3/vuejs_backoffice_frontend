@@ -8,8 +8,8 @@ interface PlanningEvent {
   id: number
   title: string
   type: EventType
-  start: string // ISO datetime
-  duration: number // minutes
+  start: string
+  duration: number
   location: string
   participants: number
 }
@@ -65,7 +65,7 @@ const events = ref<PlanningEvent[]>([
 const view = ref<'week' | 'list'>('week')
 
 const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
-const hours = Array.from({ length: 11 }, (_, i) => i + 8) // 8h → 18h
+const hours = Array.from({ length: 11 }, (_, i) => i + 8)
 
 const weekStart = ref(new Date('2026-04-27'))
 
@@ -130,17 +130,15 @@ const typeColors: Record<EventType, string> = {
         </div>
       </header>
 
-      <!-- Week navigator -->
       <div class="planning-toolbar">
-        <button class="ghost small" @click="shiftWeek(-1)">← Semaine précédente</button>
+        <button class="ghost small" @click="shiftWeek(-1)"> Semaine précédente</button>
         <span style="font-weight: 600">
           Semaine du {{ weekDays[0]?.date.toLocaleDateString('fr-FR') }} au
           {{ weekDays[6]?.date.toLocaleDateString('fr-FR') }}
         </span>
-        <button class="ghost small" @click="shiftWeek(1)">Semaine suivante →</button>
+        <button class="ghost small" @click="shiftWeek(1)">Semaine suivante </button>
       </div>
 
-      <!-- Week grid view -->
       <div v-if="view === 'week'" class="planning-grid">
         <div class="planning-hours">
           <div class="planning-day-head">&nbsp;</div>
@@ -175,7 +173,6 @@ const typeColors: Record<EventType, string> = {
         </div>
       </div>
 
-      <!-- List view -->
       <div v-else class="layout-flex layout-columns layout-gap-medium">
         <article
           v-for="e in events"

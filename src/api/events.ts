@@ -1,8 +1,5 @@
 import { http } from '@/api/http'
 
-// Events live on the FORUM backend (trailing slash required).
-// The backend Event model is minimal: only { id, title, date } exist.
-// There is no description, location, start/end date, or status field.
 export interface Event {
   id: number
   title: string

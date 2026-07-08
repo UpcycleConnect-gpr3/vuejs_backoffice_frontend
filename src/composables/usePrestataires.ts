@@ -8,8 +8,6 @@ import {
 } from '@/api/prestataires'
 import { useToasts } from '@/stores/toasts'
 
-// NOTE: no dedicated backend exists for prestataires — data is mocked
-// (données de démonstration) and edits are applied optimistically client-side.
 const MOCK: Prestataire[] = [
   {
     id: 1,
@@ -87,7 +85,7 @@ export function usePrestataires() {
     try {
       prestataires.value = await fetchPrestataires()
     } catch {
-      // No backend — keep mock data.
+
     } finally {
       loading.value = false
     }

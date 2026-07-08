@@ -1,8 +1,4 @@
-// NO BACKEND EXISTS for dashboard stats / pending-actions / activity-logs.
-// These endpoints are not implemented on any of the four backends, so the data
-// stays MOCKED in useDashboard (données de démonstration). The functions below
-// reject on purpose so the composable's try/catch falls back to the mock data.
-// Do NOT invent endpoints here.
+
 
 export interface DashboardStats {
   usersCount: number

@@ -1,8 +1,5 @@
 import { http } from '@/api/http'
 
-// Users live on the FORUM backend (trailing slash required).
-// The forum users API exposes GET / PUT / DELETE only — there is NO POST create endpoint,
-// so user creation is not available from the backoffice.
 export interface User {
   id: string
   username: string
@@ -13,7 +10,6 @@ export interface User {
   updated_at: string
 }
 
-// UpdateUserDTO accepts ONLY these fields — email is read-only on this endpoint.
 export interface UserPayload {
   username: string
   firstname: string

@@ -1,6 +1,5 @@
 import { http } from '@/api/http'
 
-// Trainings live on the TRAINING backend (trailing slash required).
 export interface Training {
   id: number
   name: string

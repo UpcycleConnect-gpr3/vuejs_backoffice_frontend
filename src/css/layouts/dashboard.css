@@ -1,4 +1,4 @@
-/* ─── Dashboard layout ──────────────────────────────────────────────────── */
+
 
 .dashboard-main {
   flex: 1;
@@ -39,8 +39,6 @@
   flex-wrap: wrap;
 }
 
-/* ─── Card ──────────────────────────────────────────────────────────────── */
-
 .dashboard-card {
   background-color: var(--green-800);
   border: 1px solid var(--green-700);
@@ -67,8 +65,6 @@
   color: var(--foreground-color);
   letter-spacing: var(--letter-spacing-normal);
 }
-
-/* ─── Stats row ─────────────────────────────────────────────────────────── */
 
 .stats-row {
   display: grid;
@@ -118,8 +114,6 @@
   line-height: 1;
 }
 
-/* ─── Grid 2 ────────────────────────────────────────────────────────────── */
-
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -132,14 +126,10 @@
   }
 }
 
-/* ─── Chart card ────────────────────────────────────────────────────────── */
-
 .dashboard-card--chart .dashboard-chart-wrapper {
   position: relative;
   height: 260px;
 }
-
-/* ─── Action card (pending tasks) ───────────────────────────────────────── */
 
 .actions-grid {
   display: grid;
@@ -197,8 +187,6 @@
   line-height: 1;
 }
 
-/* ─── Activity card ─────────────────────────────────────────────────────── */
-
 .dashboard-card--activity {
   display: flex;
   flex-direction: column;
@@ -236,8 +224,6 @@
   font-size: var(--font-size-small);
   color: var(--foreground-color);
 }
-
-/* ─── Table ─────────────────────────────────────────────────────────────── */
 
 .table-wrapper {
   width: 100%;
@@ -286,8 +272,6 @@
   vertical-align: middle;
 }
 
-/* ─── Avatar ────────────────────────────────────────────────────────────── */
-
 .avatar {
   width: 36px;
   height: 36px;
@@ -302,8 +286,6 @@
   flex-shrink: 0;
   letter-spacing: 0;
 }
-
-/* ─── Icon box ──────────────────────────────────────────────────────────── */
 
 .icon-box {
   width: 44px;
@@ -320,8 +302,6 @@
   width: 22px;
   height: 22px;
 }
-
-/* ─── Badge ─────────────────────────────────────────────────────────────── */
 
 .badge {
   display: inline-flex;
@@ -358,15 +338,11 @@
   background-color: oklch(from var(--accent-color) l c h / 0.08);
 }
 
-/* ─── Grid helpers ──────────────────────────────────────────────────────── */
-
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-5);
 }
-
-/* ── Forum-tab (réutilisé pour filtres staff) ──────────────────────────── */
 
 .forum-tab {
   height: var(--height-small);
@@ -396,8 +372,6 @@
   border-color: var(--lime-500);
   font-weight: var(--font-weight-semibold);
 }
-
-/* ── Planning ──────────────────────────────────────────────────────────── */
 
 .planning-toolbar {
   display: flex;
@@ -513,8 +487,6 @@
   border-right: 1px solid var(--green-700);
   padding-right: var(--space-3);
 }
-
-/* ── Moderation ────────────────────────────────────────────────────────── */
 
 .moderation-card.is-resolved {
   opacity: 0.7;
