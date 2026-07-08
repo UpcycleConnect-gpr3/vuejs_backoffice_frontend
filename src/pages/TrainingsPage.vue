@@ -19,10 +19,18 @@ const {
   openEdit,
   closeModal,
   save,
+  validate,
+  reject,
   askRemove,
   cancelRemove,
   confirmRemove,
 } = useTrainings()
+
+function statusMeta(status?: string): { label: string; cls: string } {
+  if (status === 'validated') return { label: 'Validée', cls: 'badge--success' }
+  if (status === 'rejected') return { label: 'Refusée', cls: 'badge--danger' }
+  return { label: 'En attente', cls: 'badge--accent' }
+}
 </script>
 
 <template>
@@ -61,13 +69,14 @@ const {
               <th>Durée</th>
               <th>Participants</th>
               <th>Lieu</th>
+              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="filtered.length === 0">
               <td
-                colspan="7"
+                colspan="8"
                 style="
                   text-align: center;
                   color: oklch(from var(--white) l c h / 0.4);
@@ -87,7 +96,29 @@ const {
               </td>
               <td>{{ t.location }}</td>
               <td>
+                <span class="badge" :class="statusMeta(t.status).cls">{{
+                  statusMeta(t.status).label
+                }}</span>
+              </td>
+              <td>
                 <div style="display: flex; gap: var(--gap-small)">
+                  <button
+                    v-if="t.status !== 'validated'"
+                    class="small ghost"
+                    title="Valider"
+                    style="color: var(--lime-500, #7ac74f)"
+                    @click="validate(t.id)"
+                  >
+                    Valider
+                  </button>
+                  <button
+                    v-if="t.status !== 'rejected'"
+                    class="small ghost"
+                    title="Refuser"
+                    @click="reject(t.id)"
+                  >
+                    Refuser
+                  </button>
                   <button class="small-square ghost" title="Modifier" @click="openEdit(t)">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
