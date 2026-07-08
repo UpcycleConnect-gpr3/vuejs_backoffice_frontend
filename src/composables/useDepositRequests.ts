@@ -1,105 +1,35 @@
 import { ref, computed, onMounted } from 'vue'
-import {
-  fetchDepositRequests,
-  updateDepositStatus,
-  type DepositRequest,
-  type DepositStatus,
-} from '@/api/deposit-requests'
-
-const MOCK: DepositRequest[] = [
-  {
-    id: 1,
-    objectName: 'Chaise en bois',
-    objectDescription: 'Chaise ancienne en chêne, quelques égratignures.',
-    category: null,
-    requesterName: 'Marc Lefebvre',
-    requesterEmail: 'marc@email.fr',
-    status: 'en-attente',
-    createdAt: '2026-04-19T10:30:00Z',
-  },
-  {
-    id: 2,
-    objectName: 'Veste en cuir',
-    objectDescription: 'Veste homme taille L, bon état général.',
-    category: null,
-    requesterName: 'Sophie Renard',
-    requesterEmail: 'sophie@email.fr',
-    status: 'en-attente',
-    createdAt: '2026-04-19T08:15:00Z',
-  },
-  {
-    id: 3,
-    objectName: 'Lampe de bureau',
-    objectDescription: 'Lampe articulée vintage, fonctionne parfaitement.',
-    category: null,
-    requesterName: 'Pierre Morel',
-    requesterEmail: 'pierre@email.fr',
-    status: 'validee',
-    createdAt: '2026-04-18T14:00:00Z',
-  },
-  {
-    id: 4,
-    objectName: 'Téléphone Nokia 3310',
-    objectDescription: 'Téléphone rétro en état de marche.',
-    category: null,
-    requesterName: 'Julie Blanc',
-    requesterEmail: 'julie@email.fr',
-    status: 'validee',
-    createdAt: '2026-04-17T11:20:00Z',
-  },
-  {
-    id: 5,
-    objectName: "Cartons d'emballage",
-    objectDescription: 'Lot de 20 cartons de taille variée.',
-    category: null,
-    requesterName: 'Thomas Petit',
-    requesterEmail: 'thomas@email.fr',
-    status: 'fermee',
-    createdAt: '2026-04-15T09:00:00Z',
-  },
-]
+import { fetchDepositedPackages, type DepositedPackage } from '@/api/deposit-requests'
 
 export function useDepositRequests() {
-  const requests = ref<DepositRequest[]>(MOCK)
+  const items = ref<DepositedPackage[]>([])
   const loading = ref(false)
-  const filterStatus = ref<DepositStatus | 'tous'>('tous')
+  const search = ref('')
 
-  const filtered = computed(() =>
-    requests.value.filter((r) =>
-      filterStatus.value === 'tous' ? true : r.status === filterStatus.value,
-    ),
-  )
+  const filtered = computed(() => {
+    const q = search.value.trim().toLowerCase()
+    if (!q) return items.value
+    return items.value.filter((d) =>
+      `${d.object_name} ${d.category} ${d.locker_name} ${d.locker_city}`
+        .toLowerCase()
+        .includes(q),
+    )
+  })
 
-  const pendingCount = computed(
-    () => requests.value.filter((r) => r.status === 'en-attente').length,
-  )
+  const count = computed(() => items.value.length)
 
   async function load() {
     loading.value = true
     try {
-      requests.value = await fetchDepositRequests()
+      items.value = await fetchDepositedPackages()
     } catch {
+      items.value = []
     } finally {
       loading.value = false
     }
   }
 
-  // No backend: update optimistically client-side (updateDepositStatus is a no-op stub).
-  async function validate(id: number) {
-    const updated = await updateDepositStatus(id, 'validee')
-    const idx = requests.value.findIndex((r) => r.id === id)
-    const existing = requests.value[idx]
-    if (existing) requests.value[idx] = updated ?? { ...existing, status: 'validee' }
-  }
-
-  async function close(id: number) {
-    const updated = await updateDepositStatus(id, 'fermee')
-    const idx = requests.value.findIndex((r) => r.id === id)
-    const existing = requests.value[idx]
-    if (existing) requests.value[idx] = updated ?? { ...existing, status: 'fermee' }
-  }
-
   onMounted(load)
 
-  return { filtered, loading, filterStatus, pendingCount, validate, close }
+  return { items, filtered, loading, search, count }
 }
