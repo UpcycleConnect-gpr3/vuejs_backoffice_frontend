@@ -35,3 +35,21 @@ export function updateUser(id: string, data: UserPayload): Promise<User> {
 export function deleteUser(id: string): Promise<void> {
   return http<void>('forum', `/users/${id}/`, { method: 'DELETE' })
 }
+
+// Rôles assignables par un administrateur (backend auth).
+export const ASSIGNABLE_ROLES = [
+  { value: 'provider', label: 'Particulier' },
+  { value: 'professional', label: 'Professionnel / Artisan' },
+  { value: 'creator', label: 'Créateur' },
+  { value: 'employee', label: 'Salarié' },
+  { value: 'administrator', label: 'Administrateur' },
+]
+
+// Change le rôle d'un utilisateur (PATCH /user/{id}/role/ sur le backend auth,
+// réservé aux administrateurs).
+export function updateUserRole(id: string, role: string): Promise<unknown> {
+  return http<unknown>('auth', `/user/${id}/role/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ role }),
+  })
+}

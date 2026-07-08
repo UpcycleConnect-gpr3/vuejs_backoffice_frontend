@@ -5,8 +5,8 @@ import AppModal from '@/components/AppModal.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useUsers } from '@/composables/useUsers'
 import { sendNotification } from '@/api/notifications'
+import { updateUserRole, ASSIGNABLE_ROLES, type User } from '@/api/users'
 import { useToasts } from '@/stores/toasts'
-import type { User } from '@/api/users'
 
 const {
   filtered,
@@ -28,7 +28,6 @@ const {
 
 const toasts = useToasts()
 
-// Envoi d'une notification à un utilisateur.
 const showNotify = ref(false)
 const notifyUser = ref<User | null>(null)
 const notifyForm = ref({ title: '', body: '' })
@@ -51,6 +50,31 @@ async function submitNotify() {
     toasts.error("Échec de l'envoi (rôle responsable requis)")
   } finally {
     notifySending.value = false
+  }
+}
+
+const showRole = ref(false)
+const roleUser = ref<User | null>(null)
+const selectedRole = ref('employee')
+const roleSaving = ref(false)
+
+function openRole(user: User) {
+  roleUser.value = user
+  selectedRole.value = 'employee'
+  showRole.value = true
+}
+
+async function submitRole() {
+  if (!roleUser.value) return
+  roleSaving.value = true
+  try {
+    await updateUserRole(roleUser.value.id, selectedRole.value)
+    toasts.success('Rôle mis à jour')
+    showRole.value = false
+  } catch {
+    toasts.error('Échec (rôle administrateur requis)')
+  } finally {
+    roleSaving.value = false
   }
 }
 
@@ -156,6 +180,7 @@ function formatDate(iso: string) {
                       />
                     </svg>
                   </button>
+                  <button class="small ghost" title="Rôle" @click="openRole(user)">Rôle</button>
                   <button class="small-square ghost" title="Modifier" @click="openEdit(user)">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -290,6 +315,32 @@ function formatDate(iso: string) {
         @click="submitNotify"
       >
         {{ notifySending ? 'Envoi…' : 'Envoyer' }}
+      </button>
+    </template>
+  </AppModal>
+
+  <AppModal
+    :open="showRole"
+    :title="roleUser ? `Rôle de ${roleUser.username}` : 'Rôle'"
+    @close="showRole = false"
+  >
+    <p class="small" style="color: oklch(from var(--white) l c h / 0.6); margin-bottom: var(--gap-medium)">
+      Attribuez un rôle à cet utilisateur (ex : « Salarié » pour en faire un animateur/formateur).
+    </p>
+    <div class="form-group">
+      <label class="required">
+        Rôle
+        <select v-model="selectedRole">
+          <option v-for="r in ASSIGNABLE_ROLES" :key="r.value" :value="r.value">
+            {{ r.label }}
+          </option>
+        </select>
+      </label>
+    </div>
+    <template #footer>
+      <button class="ghost small" @click="showRole = false">Annuler</button>
+      <button class="secondary small" :disabled="roleSaving" @click="submitRole">
+        {{ roleSaving ? 'Enregistrement…' : 'Attribuer' }}
       </button>
     </template>
   </AppModal>
