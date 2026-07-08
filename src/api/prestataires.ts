@@ -1,6 +1,5 @@
 import { http } from '@/api/http'
 
-// Prestataires : CRUD réel sur le backend UPCYCLE (pas de trailing slash).
 export interface Prestataire {
   id: number
   name: string

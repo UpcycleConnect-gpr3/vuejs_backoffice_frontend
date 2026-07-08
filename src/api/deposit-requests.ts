@@ -1,7 +1,5 @@
 import { http } from '@/api/http'
 
-// Objets actuellement en conteneur (module conteneurs du backend upcycle).
-// Remplace l'ancien mock "demandes de depot".
 export interface DepositedPackage {
   package_id: string
   code: string

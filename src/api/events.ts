@@ -25,7 +25,6 @@ export function deleteEvent(id: number): Promise<void> {
   return http<void>('forum', `/events/${id}/`, { method: 'DELETE' })
 }
 
-// Validation d'un evenement par un responsable (role administrator requis).
 export function validateEvent(id: number): Promise<{ id: number; status: string }> {
   return http<{ id: number; status: string }>('forum', `/events/${id}/validate/`, { method: 'POST' })
 }

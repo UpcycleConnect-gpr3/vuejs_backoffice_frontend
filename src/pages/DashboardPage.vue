@@ -17,7 +17,6 @@ const toasts = useToasts()
 
 const showCreateMenu = ref(false)
 
-// Client-side CSV export of the current activity feed.
 function exportCsv() {
   const rows = [
     ['id', 'admin', 'action', 'date'],
@@ -130,7 +129,6 @@ const chartOptions = {
         </div>
       </header>
 
-      <!-- Top stats row -->
       <div class="stats-row">
         <div class="stat-tile">
           <span class="stat-tile-label">Utilisateurs</span>
@@ -169,7 +167,6 @@ const chartOptions = {
         </div>
       </div>
 
-      <!-- Finances (données réelles) -->
       <div v-if="finance" class="stats-row">
         <div class="stat-tile">
           <span class="stat-tile-label">Revenus encaissés</span>
@@ -193,7 +190,6 @@ const chartOptions = {
         </div>
       </div>
 
-      <!-- Chart + pending actions -->
       <div class="dashboard-grid">
         <div class="dashboard-card dashboard-card--chart">
           <div class="card-header">
@@ -222,7 +218,6 @@ const chartOptions = {
         </div>
       </div>
 
-      <!-- Pending actions -->
       <div v-if="pendingActions.length" class="layout-flex layout-columns layout-gap-medium">
         <span class="eyebrow">Actions en attente</span>
         <div class="actions-grid">
@@ -244,7 +239,7 @@ const chartOptions = {
             </svg>
             <p class="dashboard-action-title">{{ action.title }}</p>
             <p class="dashboard-action-desc">{{ action.description }}</p>
-            <span class="dashboard-action-arrow">→</span>
+            <span class="dashboard-action-arrow"></span>
           </RouterLink>
         </div>
       </div>

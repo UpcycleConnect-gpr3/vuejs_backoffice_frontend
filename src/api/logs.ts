@@ -13,7 +13,6 @@ export interface Log {
   createdAt: string
 }
 
-// Forme réelle renvoyée par le backend upcycle (GET /logs).
 interface ActivityLog {
   id: number
   user_id: string
@@ -24,7 +23,6 @@ interface ActivityLog {
   created_at: string
 }
 
-// Journal d'activité REEL (backend upcycle, role administrator).
 export async function fetchLogs(): Promise<Log[]> {
   const rows = await http<ActivityLog[]>('upcycle', '/logs')
   return (rows || []).map((r) => ({

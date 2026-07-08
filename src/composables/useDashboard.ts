@@ -59,7 +59,7 @@ export function useDashboard() {
     } finally {
       loading.value = false
     }
-    // Synthèse financière RÉELLE (indépendante du reste, encore mocké).
+
     try {
       finance.value = await fetchFinanceStats()
     } catch {

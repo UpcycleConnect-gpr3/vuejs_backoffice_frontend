@@ -1,6 +1,5 @@
 import { http } from '@/api/http'
 
-// Envoi d'une notification à un utilisateur (backend upcycle, role administrator).
 export function sendNotification(
   userId: string,
   title: string,

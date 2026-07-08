@@ -69,7 +69,6 @@ export function fetchTrainingSchedules(id: number): Promise<Schedule[]> {
   return http<Schedule[]>('training', `/trainings/${id}/schedules/`)
 }
 
-// Validation d'une formation par un responsable (role administrator requis cote backend).
 export function validateTraining(id: number): Promise<{ id: number; status: string }> {
   return http<{ id: number; status: string }>('training', `/trainings/${id}/validate/`, {
     method: 'POST',
