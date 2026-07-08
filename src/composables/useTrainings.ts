@@ -4,6 +4,8 @@ import {
   createTraining,
   updateTraining,
   deleteTraining,
+  validateTraining,
+  rejectTraining,
   type Training,
   type TrainingPayload,
 } from '@/api/trainings'
@@ -100,6 +102,26 @@ export function useTrainings() {
     }
   }
 
+  async function validate(id: number) {
+    try {
+      await validateTraining(id)
+      toasts.success('Formation validée')
+      await load()
+    } catch {
+      toasts.error('Validation impossible (rôle responsable requis).')
+    }
+  }
+
+  async function reject(id: number) {
+    try {
+      await rejectTraining(id)
+      toasts.success('Formation refusée')
+      await load()
+    } catch {
+      toasts.error('Action impossible (rôle responsable requis).')
+    }
+  }
+
   function openCreate() {
     editingId.value = null
     form.value = emptyForm()
@@ -182,6 +204,8 @@ export function useTrainings() {
     openEdit,
     closeModal,
     save,
+    validate,
+    reject,
     askRemove,
     cancelRemove,
     confirmRemove,
