@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isAdmin, redirectToLogin } from '@/auth/session'
 import {
   DashboardPage,
   UsersPage,
@@ -23,29 +24,33 @@ const router = createRouter({
   routes: [
     { path: '/', component: DashboardPage },
 
-    // Entités
     { path: '/users', component: UsersPage },
     { path: '/providers', component: PrestatairePage },
     { path: '/categories', component: CategoriesPage },
     { path: '/objects', component: ObjectsPage },
     { path: '/projects', component: ProjectsPage },
 
-    // Forum & Training
     { path: '/talks', component: TalksPage },
     { path: '/trainings', component: TrainingsPage },
     { path: '/events', component: EventsPage },
 
-    // Système
     { path: '/deposit-requests', component: DepositRequestsPage },
     { path: '/logs', component: LogsPage },
     { path: '/settings', component: SettingsPage },
 
-    // Staff (animateurs/formateurs)
     { path: '/staff/trainings', component: MyTrainingsPage },
     { path: '/staff/planning', component: PlanningPage },
     { path: '/staff/advice', component: AdvicePage },
     { path: '/staff/moderation', component: ModerationPage },
   ],
+})
+
+router.beforeEach(() => {
+  if (!isAdmin()) {
+    redirectToLogin()
+    return false
+  }
+  return true
 })
 
 export default router

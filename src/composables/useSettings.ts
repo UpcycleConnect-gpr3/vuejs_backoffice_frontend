@@ -25,13 +25,10 @@ export function useSettings() {
     localStorage.setItem('locale', lang)
   }
 
-  // No backend endpoint exists for account updates (PATCH /account is not
-  // implemented on any backend). The save action is disabled in the UI with a
-  // "bientôt disponible" note until an endpoint is available.
   const accountSaveAvailable = false
 
   async function saveAccount() {
-    // No-op: PATCH /account has no backend yet.
+
   }
 
   return { locale, account, setLocale, saveAccount, accountSaveAvailable }

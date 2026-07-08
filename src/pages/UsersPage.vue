@@ -220,7 +220,6 @@ function formatDate(iso: string) {
     </main>
   </div>
 
-  <!-- Read-only detail modal -->
   <AppModal :open="showDetail" title="Détail de l'utilisateur" @close="closeDetail">
     <div v-if="detailUser" style="display: flex; flex-direction: column; gap: var(--gap-medium)">
       <div>
@@ -253,7 +252,6 @@ function formatDate(iso: string) {
     </template>
   </AppModal>
 
-  <!-- Edit modal (forum PUT /users/{id}/ — no create endpoint; only username/firstname/lastname are writable) -->
   <AppModal :open="showModal" title="Modifier l'utilisateur" @close="closeModal">
     <div class="form-group">
       <label class="required">

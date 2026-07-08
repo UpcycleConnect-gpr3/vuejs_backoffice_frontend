@@ -8,7 +8,6 @@ import type {
   ObjectUserSummary,
 } from '@/types/upcycle-connect'
 
-// Objects live on the UPCYCLE backend (NO trailing slash).
 export type { UpcycleObject, CreateObjectRequest, UpdateObjectRequest }
 
 export function fetchObjects(): Promise<UpcycleObject[]> {

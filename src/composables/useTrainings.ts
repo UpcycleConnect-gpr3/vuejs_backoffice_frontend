@@ -11,7 +11,6 @@ import {
 } from '@/api/trainings'
 import { useToasts } from '@/stores/toasts'
 
-// MOCK fallback (données de démonstration) used when the training backend is unreachable.
 const MOCK: Training[] = [
   {
     id: 1,
@@ -79,8 +78,6 @@ export function useTrainings() {
     filtered.value.slice((page.value - 1) * pageSize, page.value * pageSize),
   )
 
-  // Reset to the first page whenever the search filter changes so the table
-  // never lands on an out-of-range (blank) page, and clamp when the list shrinks.
   watch(search, () => {
     page.value = 1
   })
@@ -96,7 +93,7 @@ export function useTrainings() {
     try {
       trainings.value = await fetchTrainings()
     } catch {
-      // Fall back to mock data.
+
     } finally {
       loading.value = false
     }

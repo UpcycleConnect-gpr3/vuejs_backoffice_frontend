@@ -9,7 +9,6 @@ import {
 } from '@/api/talks'
 import { useToasts } from '@/stores/toasts'
 
-// MOCK fallback (données de démonstration) used when the forum backend is unreachable.
 const MOCK: Talk[] = [
   {
     id: 1,
@@ -71,8 +70,6 @@ export function useTalks() {
     filtered.value.slice((page.value - 1) * pageSize, page.value * pageSize),
   )
 
-  // Reset to the first page whenever the search filter changes so the table
-  // never lands on an out-of-range (blank) page, and clamp when the list shrinks.
   watch(search, () => {
     page.value = 1
   })
@@ -88,7 +85,7 @@ export function useTalks() {
     try {
       talks.value = await fetchTalks()
     } catch {
-      // Fall back to mock data.
+
     } finally {
       loading.value = false
     }
@@ -102,8 +99,7 @@ export function useTalks() {
 
   function openEdit(t: Talk) {
     editingId.value = t.id
-    // Update only accepts { title, status }, but keep type/description in the form
-    // for display consistency with the create form.
+
     form.value = { title: t.title, type: t.type, status: t.status, description: t.description }
     showModal.value = true
   }
@@ -119,7 +115,7 @@ export function useTalks() {
         talks.value.unshift(created)
         toasts.success('Talk créé')
       } else {
-        // Update only accepts { title, status }.
+
         const updated = await updateTalk(editingId.value, {
           title: form.value.title,
           status: form.value.status,

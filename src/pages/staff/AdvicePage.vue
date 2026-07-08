@@ -147,7 +147,6 @@ function archive(id: number) {
         <button class="primary medium" @click="openCreate">+ Nouveau conseil</button>
       </header>
 
-      <!-- Editor -->
       <section v-if="showEditor" class="dashboard-card">
         <div class="card-header">
           <span class="eyebrow">{{ editorMode === 'create' ? 'Nouveau' : 'Modification' }}</span>
@@ -199,7 +198,6 @@ function archive(id: number) {
         </form>
       </section>
 
-      <!-- Stats -->
       <div class="stats-row">
         <div class="stat-tile">
           <span class="stat-tile-label">Publiés</span>
@@ -219,7 +217,6 @@ function archive(id: number) {
         </div>
       </div>
 
-      <!-- Toolbar -->
       <div class="layout-flex layout-gap-medium layout-items-center" style="flex-wrap: wrap">
         <input
           v-model="search"
@@ -256,7 +253,6 @@ function archive(id: number) {
         </div>
       </div>
 
-      <!-- Table -->
       <div class="table-wrapper">
         <table>
           <thead>

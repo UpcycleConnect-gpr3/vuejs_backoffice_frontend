@@ -1,6 +1,5 @@
 import { http } from '@/api/http'
 
-// Categories live on the FORUM backend (trailing slash required).
 export interface Category {
   id: number
   name: string

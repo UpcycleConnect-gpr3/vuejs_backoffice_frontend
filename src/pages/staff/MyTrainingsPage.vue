@@ -154,7 +154,6 @@ function requestApproval(id: number) {
         </div>
       </header>
 
-      <!-- Form drawer -->
       <section v-if="showForm" class="dashboard-card">
         <div class="card-header">
           <span class="eyebrow">Nouvelle formation</span>
@@ -222,7 +221,6 @@ function requestApproval(id: number) {
         </form>
       </section>
 
-      <!-- Stats -->
       <div class="stats-row">
         <div class="stat-tile">
           <span class="stat-tile-label">Total</span>
@@ -242,7 +240,6 @@ function requestApproval(id: number) {
         </div>
       </div>
 
-      <!-- Filters -->
       <div class="layout-flex layout-gap-small" style="flex-wrap: wrap">
         <button class="forum-tab" :class="{ active: filter === 'all' }" @click="filter = 'all'">
           Tout
@@ -258,7 +255,6 @@ function requestApproval(id: number) {
         </button>
       </div>
 
-      <!-- Table -->
       <div class="table-wrapper">
         <table>
           <thead>

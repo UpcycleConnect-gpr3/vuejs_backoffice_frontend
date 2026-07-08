@@ -88,7 +88,7 @@ export function useCategories() {
     try {
       categories.value = await fetchCategories()
     } catch {
-      // Fall back to mock data when the forum backend is unreachable.
+
     } finally {
       loading.value = false
     }

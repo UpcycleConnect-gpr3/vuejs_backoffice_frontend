@@ -7,7 +7,6 @@ import type {
   StepSummary,
 } from '@/types/upcycle-connect'
 
-// Projects live on the UPCYCLE backend (NO trailing slash).
 export type { Project, CreateProjectRequest, UpdateProjectRequest }
 
 export function fetchProjects(): Promise<Project[]> {

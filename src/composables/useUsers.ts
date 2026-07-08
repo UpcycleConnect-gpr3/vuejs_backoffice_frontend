@@ -59,12 +59,9 @@ export function useUsers() {
   const error = ref<string | null>(null)
   const search = ref('')
 
-  // Read-only detail modal.
   const showDetail = ref(false)
   const detailUser = ref<User | null>(null)
 
-  // Edit modal. NOTE: forum users API has GET/PUT/DELETE only — no POST create,
-  // so user creation is not offered.
   const showModal = ref(false)
   const editingId = ref<string | null>(null)
   const form = ref<UserPayload>(emptyForm())
@@ -89,7 +86,7 @@ export function useUsers() {
     try {
       users.value = await fetchUsers()
     } catch {
-      // Fall back to mock data when the forum backend is unreachable.
+
     } finally {
       loading.value = false
     }

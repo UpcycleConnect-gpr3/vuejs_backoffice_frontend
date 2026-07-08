@@ -11,7 +11,6 @@ import {
 } from '@/api/events'
 import { useToasts } from '@/stores/toasts'
 
-// The backend Event model is minimal: only { id, title, date } exist.
 const MOCK: Event[] = [
   { id: 1, title: 'Repair Café Paris 11e', date: '2026-04-20' },
   { id: 2, title: 'Troc & Échange Bordeaux', date: '2026-04-25' },
