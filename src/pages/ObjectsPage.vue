@@ -19,6 +19,8 @@ const {
   openEdit,
   closeModal,
   save,
+  validate,
+  reject,
   askRemove,
   cancelRemove,
   confirmRemove,
@@ -60,13 +62,14 @@ const {
               <th>Quantité</th>
               <th>Score éco</th>
               <th>Vendeur</th>
+              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="filtered.length === 0">
               <td
-                colspan="6"
+                colspan="7"
                 style="
                   text-align: center;
                   color: oklch(from var(--white) l c h / 0.4);
@@ -83,7 +86,32 @@ const {
               <td>{{ o.score }}</td>
               <td>{{ o.sell_by }}</td>
               <td>
+                <span
+                  class="badge"
+                  :class="o.is_ad_validated ? 'badge--success' : 'badge--accent'"
+                >
+                  {{ o.is_ad_validated ? 'Validée' : 'En attente' }}
+                </span>
+              </td>
+              <td>
                 <div style="display: flex; gap: var(--gap-small)">
+                  <button
+                    v-if="!o.is_ad_validated"
+                    class="small ghost"
+                    title="Valider l'annonce"
+                    style="color: var(--lime-500, #7ac74f)"
+                    @click="validate(o.id)"
+                  >
+                    Valider
+                  </button>
+                  <button
+                    v-else
+                    class="small ghost"
+                    title="Invalider l'annonce"
+                    @click="reject(o.id)"
+                  >
+                    Invalider
+                  </button>
                   <button class="small-square ghost" title="Modifier" @click="openEdit(o)">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
