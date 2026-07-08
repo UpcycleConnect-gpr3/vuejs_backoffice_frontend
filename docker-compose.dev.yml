@@ -1,0 +1,10 @@
+services:
+  backoffice_front:
+    container_name: backoffice_front
+    build:
+      context: .
+      target: dev
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "5174:5173"
