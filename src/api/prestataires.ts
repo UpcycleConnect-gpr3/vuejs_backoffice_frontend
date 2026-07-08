@@ -1,37 +1,45 @@
-// NO BACKEND EXISTS for "prestataires" as a dedicated resource. The data stays
-// MOCKED in usePrestataires (données de démonstration). The functions below
-// reject / no-op on purpose so the composable's try/catch falls back to mock
-// data. Do NOT invent endpoints here.
+import { http } from '@/api/http'
 
+// Prestataires : CRUD réel sur le backend UPCYCLE (pas de trailing slash).
 export interface Prestataire {
   id: number
   name: string
-  siret: string
-  contactName: string
-  contactEmail: string
-  contactPhone: string
-  categorie: string | null
-  status: 'actif' | 'inactif' | 'suspendu'
-  createdAt: string
+  type: string
+  email: string
+  phone: string
+  city: string
+  status: string
+  created_at?: string
+  updated_at?: string
 }
 
-export type PrestatairePayload = Partial<Omit<Prestataire, 'id' | 'createdAt'>>
-
-const NO_BACKEND = 'No backend endpoint for prestataires — using mock data'
+export type PrestatairePayload = {
+  name: string
+  type?: string
+  email?: string
+  phone?: string
+  city?: string
+  status?: string
+}
 
 export function fetchPrestataires(): Promise<Prestataire[]> {
-  return Promise.reject(new Error(NO_BACKEND))
+  return http<Prestataire[]>('upcycle', '/prestataires')
 }
 
-export function deletePrestataire(_id: number): Promise<void> {
-  // No backend: handled optimistically client-side in the composable.
-  return Promise.resolve()
+export function createPrestataire(data: PrestatairePayload): Promise<{ id: number }> {
+  return http<{ id: number }>('upcycle', '/prestataires', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
 }
 
-export function updatePrestataire(
-  _id: number,
-  _data: PrestatairePayload,
-): Promise<Prestataire | null> {
-  // No backend: handled optimistically client-side in the composable.
-  return Promise.resolve(null)
+export function updatePrestataire(id: number, data: PrestatairePayload): Promise<{ id: number }> {
+  return http<{ id: number }>('upcycle', `/prestataires/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+}
+
+export function deletePrestataire(id: number): Promise<void> {
+  return http<void>('upcycle', `/prestataires/${id}`, { method: 'DELETE' })
 }

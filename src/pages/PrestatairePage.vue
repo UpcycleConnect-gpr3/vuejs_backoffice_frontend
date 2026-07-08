@@ -2,14 +2,20 @@
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppModal from '@/components/AppModal.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import Pagination from '@/components/Pagination.vue'
 import { usePrestataires } from '@/composables/usePrestataires'
 
 const {
   filtered,
+  paginated,
   search,
+  page,
+  pageSize,
   showModal,
+  editingId,
   form,
   confirmId,
+  openCreate,
   openEdit,
   closeModal,
   save,
@@ -26,18 +32,21 @@ const {
     <main class="dashboard-main">
       <div class="dashboard-row" style="align-items: center; justify-content: space-between">
         <h1 class="dashboard-title">Prestataires</h1>
-        <span
-          style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.4)"
-        >
-          {{ filtered.length }} prestataire{{ filtered.length > 1 ? 's' : '' }}
-        </span>
+        <div style="display: flex; align-items: center; gap: var(--gap-medium)">
+          <span
+            style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.4)"
+          >
+            {{ filtered.length }} prestataire{{ filtered.length > 1 ? 's' : '' }}
+          </span>
+          <button class="secondary small" @click="openCreate">+ Créer un prestataire</button>
+        </div>
       </div>
 
       <div class="dashboard-row">
         <input
           v-model="search"
           type="text"
-          placeholder="Rechercher par nom, SIRET ou contact…"
+          placeholder="Rechercher par nom, type, ville…"
           style="flex: 1"
         />
       </div>
@@ -47,16 +56,17 @@ const {
           <thead>
             <tr>
               <th>Nom</th>
-              <th>SIRET</th>
+              <th>Type</th>
               <th>Contact</th>
-              <th>Catégorie</th>
+              <th>Ville</th>
+              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="filtered.length === 0">
               <td
-                colspan="5"
+                colspan="6"
                 style="
                   text-align: center;
                   color: oklch(from var(--white) l c h / 0.4);
@@ -66,32 +76,25 @@ const {
                 Aucun prestataire trouvé
               </td>
             </tr>
-            <tr v-for="p in filtered" :key="p.id">
+            <tr v-for="p in paginated" :key="p.id">
               <td style="font-weight: 500">{{ p.name }}</td>
-              <td style="font-family: monospace; font-size: var(--font-size-small)">
-                {{ p.siret }}
-              </td>
+              <td style="color: oklch(from var(--white) l c h / 0.6)">{{ p.type || '–' }}</td>
               <td>
-                <div style="font-weight: 500">{{ p.contactName }}</div>
+                <div>{{ p.email || '–' }}</div>
                 <div
-                  style="
-                    font-size: var(--font-size-small);
-                    color: oklch(from var(--white) l c h / 0.5);
-                  "
+                  style="font-size: var(--font-size-small); color: oklch(from var(--white) l c h / 0.5)"
                 >
-                  {{ p.contactEmail }}
-                </div>
-                <div
-                  style="
-                    font-size: var(--font-size-small);
-                    color: oklch(from var(--white) l c h / 0.5);
-                  "
-                >
-                  {{ p.contactPhone }}
+                  {{ p.phone }}
                 </div>
               </td>
-              <td style="color: oklch(from var(--white) l c h / 0.4)">
-                {{ p.categorie ?? '–' }}
+              <td>{{ p.city || '–' }}</td>
+              <td>
+                <span
+                  class="badge"
+                  :class="p.status === 'active' ? 'badge--success' : 'badge--muted'"
+                >
+                  {{ p.status === 'active' ? 'Actif' : 'Inactif' }}
+                </span>
               </td>
               <td>
                 <div style="display: flex; gap: var(--gap-small)">
@@ -130,44 +133,69 @@ const {
             </tr>
           </tbody>
         </table>
+        <Pagination
+          :total="filtered.length"
+          :page="page"
+          :page-size="pageSize"
+          @update:page="page = $event"
+        />
       </div>
     </main>
   </div>
 
-  <AppModal :open="showModal" title="Modifier le prestataire" @close="closeModal">
+  <AppModal
+    :open="showModal"
+    :title="editingId ? 'Modifier le prestataire' : 'Créer un prestataire'"
+    @close="closeModal"
+  >
     <div class="form-group">
       <label class="required">
         Nom
         <input v-model="form.name" type="text" placeholder="Nom du prestataire" />
       </label>
     </div>
-    <div class="form-group">
-      <label>
-        SIRET
-        <input v-model="form.siret" type="text" placeholder="SIRET" />
-      </label>
+    <div class="dashboard-row">
+      <div class="form-group" style="flex: 1">
+        <label>
+          Type
+          <input v-model="form.type" type="text" placeholder="Fournisseur, transporteur…" />
+        </label>
+      </div>
+      <div class="form-group" style="flex: 1">
+        <label>
+          Ville
+          <input v-model="form.city" type="text" placeholder="Ville" />
+        </label>
+      </div>
+    </div>
+    <div class="dashboard-row">
+      <div class="form-group" style="flex: 1">
+        <label>
+          E-mail
+          <input v-model="form.email" type="email" placeholder="contact@email.fr" />
+        </label>
+      </div>
+      <div class="form-group" style="flex: 1">
+        <label>
+          Téléphone
+          <input v-model="form.phone" type="text" placeholder="06 12 34 56 78" />
+        </label>
+      </div>
     </div>
     <div class="form-group">
       <label>
-        Nom du contact
-        <input v-model="form.contactName" type="text" placeholder="Nom du contact" />
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        E-mail du contact
-        <input v-model="form.contactEmail" type="email" placeholder="contact@email.fr" />
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        Téléphone du contact
-        <input v-model="form.contactPhone" type="text" placeholder="06 12 34 56 78" />
+        Statut
+        <select v-model="form.status">
+          <option value="active">Actif</option>
+          <option value="inactive">Inactif</option>
+        </select>
       </label>
     </div>
     <template #footer>
       <button class="ghost small" @click="closeModal">Annuler</button>
-      <button class="secondary small" @click="save">Enregistrer</button>
+      <button class="secondary small" @click="save">
+        {{ editingId ? 'Enregistrer' : 'Créer' }}
+      </button>
     </template>
   </AppModal>
 
